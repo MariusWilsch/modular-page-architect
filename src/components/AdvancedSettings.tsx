@@ -39,14 +39,6 @@ const AdvancedSettings = () => {
               <AccordionContent>
                 <div className="space-y-4">
                   <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="flow-rate">Flow Rate (Q)</Label>
-                    <Input type="number" id="flow-rate" placeholder="50" />
-                  </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="head">Head (H)</Label>
-                    <Input type="number" id="head" placeholder="8" />
-                  </div>
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label htmlFor="efficiency">Pump Efficiency (η)</Label>
                     <Input type="number" id="efficiency" placeholder="0.7" />
                   </div>
