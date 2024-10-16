@@ -8,11 +8,11 @@ const AddModule: React.FC = () => {
   return (
     <>
       <div
-        className="bg-gray-100 rounded-lg p-4 shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors h-[250px] overflow-hidden"
+        className="bg-gray-100 rounded-lg p-6 shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors h-full"
         onClick={() => setIsModalOpen(true)}
       >
-        <Plus size={48} className="text-green-500 mb-2" />
-        <span className="text-lg font-semibold">Add Module</span>
+        <Plus size={48} className="text-green-500 mb-4" />
+        <span className="text-xl font-semibold">Add Module</span>
       </div>
       <AddModuleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>

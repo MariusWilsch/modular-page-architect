@@ -68,13 +68,13 @@ const Module: React.FC<ModuleProps> = ({
           </SheetContent>
         </Sheet>
       )}
-      <div className="flex-grow overflow-y-auto">
+      <div className="flex-grow flex flex-col">
         {isFormulaView ? (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center flex-grow">
             <span className="text-xl text-center">{formula}</span>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 flex-grow">
             {inputs.map((input, index) => (
               <div key={index} className="mb-4">
                 <label className="block text-lg font-medium text-gray-700 mb-2">
