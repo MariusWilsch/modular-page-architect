@@ -64,10 +64,15 @@ export const calculateResults = createAsyncThunk(
 
     const energyConsumption = totalPower * 24; // Assuming 24 hours operation
 
+    // Round the results to 3 decimal places
+    const roundedInstalledPower = Number(totalPower.toFixed(3));
+    const roundedTotalFlow = Number(totalFlow.toFixed(3));
+    const roundedEnergyConsumption = Number(energyConsumption.toFixed(3));
+
     return {
-      installedPower: totalPower,
-      totalFlow,
-      energyConsumption,
+      installedPower: roundedInstalledPower,
+      totalFlow: roundedTotalFlow,
+      energyConsumption: roundedEnergyConsumption,
     };
   }
 );

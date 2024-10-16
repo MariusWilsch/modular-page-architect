@@ -23,14 +23,8 @@ export const dummyModules: ModuleData[] = [
   {
     title: "Level Control (LC)",
     inputs: [
-      { label: "Type", value: "Example here", type: InputType.FREQUENT },
+      { label: "Type", value: "Not implemented yet", type: InputType.FREQUENT },
     ],
     formula: "To be defined",
   },
-];
-
-export const calculations = [
-  { label: "Installed Power", value: 75, unit: "kW" },
-  { label: "Total Flow", value: 150, unit: "m³/h" },
-  { label: "Energy Consumption", value: 1800, unit: "kWh/day" },
 ];
