@@ -11,20 +11,33 @@ import {
 } from "../ui/sheet";
 import FormulaEditor from "../FormulaEditor";
 
+interface Input {
+  label: string;
+  value: string | number;
+  unit?: string;
+}
+
 interface ModuleProps {
   title: string;
-  inputs: { label: string; value: string | number; unit?: string }[];
+  inputs: Input[];
   formula: string;
   isFormulaView: boolean;
 }
 
 const Module: React.FC<ModuleProps> = ({
   title,
-  inputs,
+  inputs: initialInputs,
   formula,
   isFormulaView,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [inputs, setInputs] = useState(initialInputs);
+
+  const handleInputChange = (index: number, newValue: string) => {
+    const updatedInputs = [...inputs];
+    updatedInputs[index] = { ...updatedInputs[index], value: newValue };
+    setInputs(updatedInputs);
+  };
 
   return (
     <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
@@ -72,7 +85,7 @@ const Module: React.FC<ModuleProps> = ({
                     type="text"
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-12 py-3 sm:text-lg border-gray-300 rounded-md bg-gray-50"
                     value={input.value}
-                    onChange={() => {}} // We'll implement this later
+                    onChange={(e) => handleInputChange(index, e.target.value)}
                   />
                   {input.unit && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
