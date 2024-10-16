@@ -41,6 +41,9 @@ const Module: React.FC<ModuleProps> = ({
     setInputs(updatedInputs);
   };
 
+  const frequentInputs = inputs.filter(input => ['Q', 'H'].includes(input.label.split(' ')[0]));
+  const rareInputs = inputs.filter(input => !['Q', 'H', 'ρ', 'g'].includes(input.label.split(' ')[0]));
+
   return (
     <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
       <h3 className="text-2xl font-semibold mb-6">{title}</h3>
@@ -84,7 +87,7 @@ const Module: React.FC<ModuleProps> = ({
           </div>
         ) : (
           <div className="space-y-4 flex-grow">
-            {inputs.map((input, index) => (
+            {frequentInputs.map((input, index) => (
               <div key={index} className="mb-4">
                 <label className="block text-lg font-medium text-gray-700 mb-2">
                   {input.label}
@@ -104,6 +107,16 @@ const Module: React.FC<ModuleProps> = ({
                 </div>
               </div>
             ))}
+            {rareInputs.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-md font-medium text-gray-700 mb-2">Other Parameters</h4>
+                {rareInputs.map((input, index) => (
+                  <div key={index} className="text-sm text-gray-600 mb-1">
+                    {input.label}: {input.value} {input.unit}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

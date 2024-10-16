@@ -6,8 +6,6 @@ export const dummyModules: ModuleData[] = [
     inputs: [
       { label: "Flow rate (Q)", value: 50, unit: "m³/h" },
       { label: "Head (H)", value: 8, unit: "m" },
-      { label: "Density (ρ)", value: 1000, unit: "kg/m³" },
-      { label: "Gravity (g)", value: 9.81, unit: "m/s²" },
       { label: "Efficiency (η)", value: 0.7 },
     ],
     formula: "P = \\frac{Q \\cdot H \\cdot \\rho \\cdot g}{3600 \\cdot \\eta}",
@@ -20,6 +18,11 @@ export const dummyModules: ModuleData[] = [
     ],
     formula: "h = h_0 + (Q_in - Q_out) * t / A",
   },
+];
+
+export const globalConstants = [
+  { label: "Water Density (ρ)", value: 1000, unit: "kg/m³" },
+  { label: "Gravity (g)", value: 9.81, unit: "m/s²" },
 ];
 
 export const calculations = [
