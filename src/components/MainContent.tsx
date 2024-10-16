@@ -1,5 +1,5 @@
 import React from 'react';
-import Module from './Module';
+import Module from './organisms/Module';
 import AddModule from './AddModule';
 
 interface MainContentProps {
