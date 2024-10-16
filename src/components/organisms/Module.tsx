@@ -20,7 +20,7 @@ interface ModuleProps {
 
 const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }) => {
   return (
-    <div className="bg-gray-100 rounded-lg p-4 shadow-md relative flex flex-col">
+    <div className="bg-gray-100 rounded-lg p-4 shadow-md relative flex flex-col h-full">
       <Sheet>
         <SheetTrigger asChild>
           <ModuleHeader title={title} isFormulaView={isFormulaView} onEditClick={() => {}} />
