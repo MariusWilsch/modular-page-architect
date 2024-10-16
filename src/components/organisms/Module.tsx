@@ -79,7 +79,7 @@ const Module: React.FC<ModuleProps> = ({
             <div className="mt-4 text-sm text-gray-600">
               {inputs.map((input, index) => (
                 <div key={index} className="mb-1">
-                  <InlineMath math={`${input.label.split(' ')[0]} = ${input.value}${input.unit ? ` \\text{${input.unit}}` : ''}`} />
+                  <InlineMath math={`${input.label.split(' ')[0]} = ${input.value || 0}${input.unit ? ` \\text{${input.unit}}` : ''}`} />
                 </div>
               ))}
             </div>
@@ -95,8 +95,8 @@ const Module: React.FC<ModuleProps> = ({
                   <input
                     type="text"
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-12 py-3 sm:text-lg border-gray-300 rounded-md bg-gray-50"
-                    value={input.value}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
+                    value={input.value || 0}
+                    onChange={(e) => handleInputChange(inputs.indexOf(input), e.target.value)}
                   />
                   {input.unit && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -111,7 +111,7 @@ const Module: React.FC<ModuleProps> = ({
                 <h4 className="text-md font-medium text-gray-700 mb-2">Other Parameters</h4>
                 {rareInputs.map((input, index) => (
                   <div key={index} className="text-sm text-gray-600 mb-1">
-                    {input.label}: {input.value} {input.unit}
+                    {input.label}: {input.value || 0} {input.unit}
                   </div>
                 ))}
               </div>
@@ -121,7 +121,7 @@ const Module: React.FC<ModuleProps> = ({
                 <h4 className="text-md font-medium text-gray-700 mb-2">Constants</h4>
                 {constantInputs.map((input, index) => (
                   <div key={index} className="text-sm text-gray-600 mb-1">
-                    {input.label}: {input.value} {input.unit}
+                    {input.label}: {input.value || 0} {input.unit}
                   </div>
                 ))}
               </div>
