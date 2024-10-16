@@ -3,8 +3,8 @@ import { Plus } from 'lucide-react';
 
 const AddModule: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-      <Plus className="mr-2" />
+    <div className="bg-gray-100 rounded-lg p-4 shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+      <Plus size={48} className="text-green-500 mb-2" />
       <span className="text-lg font-semibold">Add Module</span>
     </div>
   );
