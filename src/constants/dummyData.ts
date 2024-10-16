@@ -1,11 +1,16 @@
-export const dummyModules = [
+import { ModuleData } from '../types/moduleTypes';
+
+export const dummyModules: ModuleData[] = [
   {
     title: "Feed Pump",
     inputs: [
-      { label: "Power", value: 50, unit: "kW" },
-      { label: "Flow", value: 100, unit: "m³/h" },
+      { label: "Flow rate (Q)", value: 50, unit: "m³/h" },
+      { label: "Head (H)", value: 8, unit: "m" },
+      { label: "Density (ρ)", value: 1000, unit: "kg/m³" },
+      { label: "Gravity (g)", value: 9.81, unit: "m/s²" },
+      { label: "Efficiency (η)", value: 0.7 },
     ],
-    formula: "P = ρ g Q H / η",
+    formula: "P = \\frac{Q \\cdot H \\cdot \\rho \\cdot g}{3600 \\cdot \\eta}",
   },
   {
     title: "Level Control (LC)",

@@ -10,6 +10,8 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import FormulaEditor from "../FormulaEditor";
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
 
 interface Input {
   label: string;
@@ -70,8 +72,15 @@ const Module: React.FC<ModuleProps> = ({
       )}
       <div className="flex-grow flex flex-col">
         {isFormulaView ? (
-          <div className="flex items-center justify-center flex-grow">
-            <span className="text-xl text-center">{formula}</span>
+          <div className="flex flex-col items-center justify-center flex-grow">
+            <BlockMath math={formula} />
+            <div className="mt-4 text-sm text-gray-600">
+              {inputs.map((input, index) => (
+                <div key={index} className="mb-1">
+                  <InlineMath math={`${input.label.split(' ')[0]} = ${input.value}${input.unit ? ` \\text{${input.unit}}` : ''}`} />
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="space-y-4 flex-grow">
