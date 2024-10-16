@@ -12,12 +12,7 @@ import {
 import FormulaEditor from "../FormulaEditor";
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-
-interface Input {
-  label: string;
-  value: string | number;
-  unit?: string;
-}
+import { Input, InputType } from "../../types/moduleTypes";
 
 interface ModuleProps {
   title: string;
@@ -28,21 +23,22 @@ interface ModuleProps {
 
 const Module: React.FC<ModuleProps> = ({
   title,
-  inputs: initialInputs,
+  inputs,
   formula,
   isFormulaView,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [inputs, setInputs] = useState(initialInputs);
+  const [localInputs, setLocalInputs] = useState(inputs);
 
   const handleInputChange = (index: number, newValue: string) => {
-    const updatedInputs = [...inputs];
+    const updatedInputs = [...localInputs];
     updatedInputs[index] = { ...updatedInputs[index], value: newValue };
-    setInputs(updatedInputs);
+    setLocalInputs(updatedInputs);
   };
 
-  const frequentInputs = inputs.filter(input => ['Q', 'H'].includes(input.label.split(' ')[0]));
-  const rareInputs = inputs.filter(input => !['Q', 'H', 'ρ', 'g'].includes(input.label.split(' ')[0]));
+  const frequentInputs = localInputs.filter(input => input.type === InputType.FREQUENT);
+  const rareInputs = localInputs.filter(input => input.type === InputType.RARE);
+  const constantInputs = localInputs.filter(input => input.type === InputType.CONSTANT);
 
   return (
     <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
@@ -78,7 +74,7 @@ const Module: React.FC<ModuleProps> = ({
           <div className="flex flex-col items-center justify-center flex-grow">
             <BlockMath math={formula} />
             <div className="mt-4 text-sm text-gray-600">
-              {inputs.map((input, index) => (
+              {localInputs.map((input, index) => (
                 <div key={index} className="mb-1">
                   <InlineMath math={`${input.label.split(' ')[0]} = ${input.value}${input.unit ? ` \\text{${input.unit}}` : ''}`} />
                 </div>
@@ -111,6 +107,16 @@ const Module: React.FC<ModuleProps> = ({
               <div className="mt-4">
                 <h4 className="text-md font-medium text-gray-700 mb-2">Other Parameters</h4>
                 {rareInputs.map((input, index) => (
+                  <div key={index} className="text-sm text-gray-600 mb-1">
+                    {input.label}: {input.value} {input.unit}
+                  </div>
+                ))}
+              </div>
+            )}
+            {constantInputs.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-md font-medium text-gray-700 mb-2">Constants</h4>
+                {constantInputs.map((input, index) => (
                   <div key={index} className="text-sm text-gray-600 mb-1">
                     {input.label}: {input.value} {input.unit}
                   </div>
