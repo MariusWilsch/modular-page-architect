@@ -1,11 +1,6 @@
 import React from 'react';
 import CalculationItem from './CalculationItem';
-
-const calculations = [
-  { label: 'Installed Power', value: 75, unit: 'kW' },
-  { label: 'Total Flow', value: 150, unit: 'm³/h' },
-  { label: 'Energy Consumption', value: 1800, unit: 'kWh/day' },
-];
+import { calculations } from '../constants/dummyData';
 
 const RightSidebar: React.FC = () => {
   return (

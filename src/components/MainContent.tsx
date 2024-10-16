@@ -1,29 +1,11 @@
 import React from 'react';
 import Module from './organisms/Module';
 import AddModule from './AddModule';
+import { dummyModules } from '../constants/dummyData';
 
 interface MainContentProps {
   isFormulaView: boolean;
 }
-
-const dummyModules = [
-  {
-    title: "Feed Pump",
-    inputs: [
-      { label: "Power", value: 50, unit: "kW" },
-      { label: "Flow", value: 100, unit: "m³/h" },
-    ],
-    formula: "P = ρ g Q H / η",
-  },
-  {
-    title: "Level Control (LC)",
-    inputs: [
-      { label: "Type", value: "Radar" },
-      { label: "Range", value: "0-5", unit: "m" },
-    ],
-    formula: "h = h_0 + (Q_in - Q_out) * t / A",
-  },
-];
 
 const MainContent: React.FC<MainContentProps> = ({ isFormulaView }) => {
   return (
