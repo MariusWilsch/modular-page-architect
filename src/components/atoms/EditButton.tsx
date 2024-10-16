@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Edit } from 'lucide-react';
 import { Button } from '../ui/button';
 
@@ -7,16 +7,10 @@ interface EditButtonProps {
 }
 
 const EditButton: React.FC<EditButtonProps> = ({ onClick }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <Button
-      className={`absolute top-2 right-2 p-2 transition-colors ${
-        isHovered ? 'bg-gray-200' : ''
-      }`}
+      className="absolute top-2 right-2 p-2 transition-colors hover:bg-gray-200"
       variant="ghost"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <Edit size={16} />
