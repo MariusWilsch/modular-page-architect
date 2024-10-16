@@ -27,20 +27,20 @@ const Module: React.FC<ModuleProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="bg-gray-100 rounded-lg p-4 shadow-md relative flex flex-col h-[250px] overflow-hidden">
-      <h3 className="text-xl font-semibold mb-4">{title}</h3>
+    <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
+      <h3 className="text-2xl font-semibold mb-6">{title}</h3>
       {isFormulaView && (
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              className={`absolute top-2 right-2 p-2 transition-colors ${
+              className={`absolute top-4 right-4 p-2 transition-colors ${
                 isHovered ? "bg-gray-200" : ""
               }`}
               variant="ghost"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <Edit size={16} />
+              <Edit size={20} />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[400px] sm:w-[540px]">
@@ -58,27 +58,25 @@ const Module: React.FC<ModuleProps> = ({
       <div className="flex-grow overflow-y-auto">
         {isFormulaView ? (
           <div className="flex items-center justify-center h-full">
-            <span className="text-lg text-center">{formula}</span>
+            <span className="text-xl text-center">{formula}</span>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-4">
             {inputs.map((input, index) => (
-              <div key={index} className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+              <div key={index} className="mb-4">
+                <label className="block text-lg font-medium text-gray-700 mb-2">
                   {input.label}
                 </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="relative rounded-md shadow-sm">
                   <input
                     type="text"
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md"
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-12 py-3 sm:text-lg border-gray-300 rounded-md bg-gray-50"
                     value={input.value}
                     onChange={() => {}} // We'll implement this later
                   />
                   {input.unit && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm">
-                        {input.unit}
-                      </span>
+                      <span className="text-gray-400 sm:text-lg">{input.unit}</span>
                     </div>
                   )}
                 </div>
