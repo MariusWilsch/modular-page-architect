@@ -15,6 +15,7 @@ const MainContent: React.FC<MainContentProps> = ({ isFormulaView }) => {
         {dummyModules.map((module, index) => (
           <Module
             key={index}
+            moduleIndex={index}
             title={module.title}
             inputs={module.inputs}
             formula={module.formula}
