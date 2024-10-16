@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Edit } from 'lucide-react';
 import { Button } from './ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
+import FormulaEditor from './FormulaEditor';
 
 interface ModuleProps {
   title: string;
@@ -10,17 +19,35 @@ interface ModuleProps {
 }
 
 const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div className="bg-gray-100 rounded-lg p-4 shadow-md relative min-w-[250px] min-h-[200px] flex flex-col">
       <h3 className="text-xl font-semibold mb-4">{title}</h3>
       {isFormulaView && (
-        <Button
-          className="absolute top-2 right-2 p-2"
-          variant="ghost"
-          onClick={() => {/* TODO: Implement formula editing */}}
-        >
-          <Edit size={16} />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              className={`absolute top-2 right-2 p-2 transition-colors ${
+                isHovered ? 'bg-gray-200' : ''
+              }`}
+              variant="ghost"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <Edit size={16} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+            <SheetHeader>
+              <SheetTitle>Edit Formula</SheetTitle>
+              <SheetDescription>
+                Modify existing formulas or create new ones using the options below.
+              </SheetDescription>
+            </SheetHeader>
+            <FormulaEditor formula={formula} />
+          </SheetContent>
+        </Sheet>
       )}
       <div className="flex-grow flex items-center justify-center">
         {isFormulaView ? (
