@@ -8,7 +8,7 @@ const AddModule: React.FC = () => {
   return (
     <>
       <div
-        className="bg-gray-100 rounded-lg p-4 shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors h-full"
+        className="bg-gray-100 rounded-lg p-4 shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
         onClick={() => setIsModalOpen(true)}
       >
         <Plus size={48} className="text-green-500 mb-2" />
