@@ -9,7 +9,12 @@ export const dummyModules: ModuleData[] = [
   {
     title: "Feed Pump",
     inputs: [
-      { label: "Flow rate (Q)", value: 50, unit: "m³/h", type: InputType.FREQUENT },
+      {
+        label: "Flow rate (Q)",
+        value: 50,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+      },
       { label: "Head (H)", value: 8, unit: "m", type: InputType.FREQUENT },
       { label: "Efficiency (η)", value: 0.7, type: InputType.RARE },
     ],
@@ -17,11 +22,8 @@ export const dummyModules: ModuleData[] = [
   },
   {
     title: "Level Control (LC)",
-    inputs: [
-      { label: "Type", value: "Radar", type: InputType.RARE },
-      { label: "Range", value: "0-5", unit: "m", type: InputType.FREQUENT },
-    ],
-    formula: "h = h_0 + (Q_in - Q_out) * t / A",
+    inputs: [{ label: "Type", value: "Example here", type: InputType.FREQUENT }],
+    formula: "To be defined",
   },
 ];
 
