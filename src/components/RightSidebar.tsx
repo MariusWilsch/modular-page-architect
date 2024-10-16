@@ -1,13 +1,17 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CalculationItem from './CalculationItem';
-
-const calculations = [
-  { label: 'Installed Power', value: 75, unit: 'kW' },
-  { label: 'Total Flow', value: 150, unit: 'm³/h' },
-  { label: 'Energy Consumption', value: 1800, unit: 'kWh/day' },
-];
+import { selectResults } from '../store/calculatorSlice';
 
 const RightSidebar: React.FC = () => {
+  const results = useSelector(selectResults);
+
+  const calculations = [
+    { label: 'Installed Power', value: results.installedPower, unit: 'kW' },
+    { label: 'Total Flow', value: results.totalFlow, unit: 'm³/h' },
+    { label: 'Energy Consumption', value: results.energyConsumption, unit: 'kWh/day' },
+  ];
+
   return (
     <aside className="w-64 bg-gray-100 p-4 overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Real-time Calculations</h2>

@@ -1,12 +1,21 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { globalConstants } from '../constants/dummyData';
+import { selectGlobalConstants, updateGlobalConstant, debouncedCalculateResults } from '../store/calculatorSlice';
 
 const AdvancedSettings = () => {
+  const globalConstants = useSelector(selectGlobalConstants);
+  const dispatch = useDispatch();
+
+  const handleConstantChange = (index: number, value: string) => {
+    dispatch(updateGlobalConstant({ index, value: parseFloat(value) }));
+    debouncedCalculateResults(dispatch);
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -28,7 +37,8 @@ const AdvancedSettings = () => {
                 <Input
                   type="number"
                   id={`constant-${index}`}
-                  defaultValue={constant.value}
+                  value={constant.value}
+                  onChange={(e) => handleConstantChange(index, e.target.value)}
                   className="pr-16"
                 />
                 <span className="absolute right-3 top-9 text-sm text-gray-400">
@@ -44,26 +54,9 @@ const AdvancedSettings = () => {
             <AccordionItem value="item-1">
               <AccordionTrigger>Feed Pump</AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-4">
-                  <div className="grid w-full max-w-sm items-center gap-1.5 relative">
-                    <Label htmlFor="efficiency">Pump Efficiency</Label>
-                    <Input
-                      type="number"
-                      id="efficiency"
-                      defaultValue={0.7}
-                      step={0.01}
-                      min={0}
-                      max={1}
-                      className="pr-8"
-                    />
-                    <span className="absolute right-3 top-9 text-sm text-gray-400">
-                      η
-                    </span>
-                  </div>
-                </div>
+                {/* Add equipment-specific settings here */}
               </AccordionContent>
             </AccordionItem>
-            {/* Add more AccordionItems for other equipment as needed */}
           </Accordion>
         </div>
       </SheetContent>

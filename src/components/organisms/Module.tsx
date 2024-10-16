@@ -13,12 +13,15 @@ import FormulaEditor from "../FormulaEditor";
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import { Input, InputType } from "../../types/moduleTypes";
+import { useDispatch } from 'react-redux';
+import { updateModuleInput, debouncedCalculateResults } from '../../store/calculatorSlice';
 
 interface ModuleProps {
   title: string;
   inputs: Input[];
   formula: string;
   isFormulaView: boolean;
+  moduleIndex: number;
 }
 
 const Module: React.FC<ModuleProps> = ({
@@ -26,19 +29,19 @@ const Module: React.FC<ModuleProps> = ({
   inputs,
   formula,
   isFormulaView,
+  moduleIndex,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [localInputs, setLocalInputs] = useState(inputs);
+  const dispatch = useDispatch();
 
   const handleInputChange = (index: number, newValue: string) => {
-    const updatedInputs = [...localInputs];
-    updatedInputs[index] = { ...updatedInputs[index], value: newValue };
-    setLocalInputs(updatedInputs);
+    dispatch(updateModuleInput({ moduleIndex, inputIndex: index, value: newValue }));
+    debouncedCalculateResults(dispatch);
   };
 
-  const frequentInputs = localInputs.filter(input => input.type === InputType.FREQUENT);
-  const rareInputs = localInputs.filter(input => input.type === InputType.RARE);
-  const constantInputs = localInputs.filter(input => input.type === InputType.CONSTANT);
+  const frequentInputs = inputs.filter(input => input.type === InputType.FREQUENT);
+  const rareInputs = inputs.filter(input => input.type === InputType.RARE);
+  const constantInputs = inputs.filter(input => input.type === InputType.CONSTANT);
 
   return (
     <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
@@ -74,7 +77,7 @@ const Module: React.FC<ModuleProps> = ({
           <div className="flex flex-col items-center justify-center flex-grow">
             <BlockMath math={formula} />
             <div className="mt-4 text-sm text-gray-600">
-              {localInputs.map((input, index) => (
+              {inputs.map((input, index) => (
                 <div key={index} className="mb-1">
                   <InlineMath math={`${input.label.split(' ')[0]} = ${input.value}${input.unit ? ` \\text{${input.unit}}` : ''}`} />
                 </div>
