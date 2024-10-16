@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { globalConstants } from '../constants/dummyData';
 
 const AdvancedSettings = () => {
   return (
@@ -19,16 +20,22 @@ const AdvancedSettings = () => {
           </SheetDescription>
         </SheetHeader>
         <div className="py-4">
-          <h3 className="text-lg font-medium">Global Constants</h3>
-          <div className="space-y-4 mt-4">
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="density">Water Density (ρ)</Label>
-              <Input type="number" id="density" placeholder="1000" />
-            </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="gravity">Gravity (g)</Label>
-              <Input type="number" id="gravity" placeholder="9.81" />
-            </div>
+          <h3 className="text-lg font-medium mb-4">Global Constants</h3>
+          <div className="space-y-4">
+            {globalConstants.map((constant, index) => (
+              <div key={index} className="grid w-full max-w-sm items-center gap-1.5 relative">
+                <Label htmlFor={`constant-${index}`}>{constant.label.split(' ')[0]}</Label>
+                <Input
+                  type="number"
+                  id={`constant-${index}`}
+                  defaultValue={constant.value}
+                  className="pr-16"
+                />
+                <span className="absolute right-3 top-9 text-sm text-gray-400">
+                  {constant.unit}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="py-4">
@@ -38,9 +45,20 @@ const AdvancedSettings = () => {
               <AccordionTrigger>Feed Pump</AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4">
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="efficiency">Pump Efficiency (η)</Label>
-                    <Input type="number" id="efficiency" placeholder="0.7" />
+                  <div className="grid w-full max-w-sm items-center gap-1.5 relative">
+                    <Label htmlFor="efficiency">Pump Efficiency</Label>
+                    <Input
+                      type="number"
+                      id="efficiency"
+                      defaultValue={0.7}
+                      step={0.01}
+                      min={0}
+                      max={1}
+                      className="pr-8"
+                    />
+                    <span className="absolute right-3 top-9 text-sm text-gray-400">
+                      η
+                    </span>
                   </div>
                 </div>
               </AccordionContent>
