@@ -34,8 +34,8 @@ const Module: React.FC<ModuleProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
 
-  const handleInputChange = (index: number, newValue: string) => {
-    dispatch(updateModuleInput({ moduleIndex, inputIndex: index, value: newValue }));
+  const handleInputChange = (inputIndex: number, newValue: string) => {
+    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: newValue }));
     debouncedCalculateResults(dispatch);
   };
 
