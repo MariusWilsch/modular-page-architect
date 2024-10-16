@@ -1,15 +1,19 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import CalculationItem from './CalculationItem';
-import { selectResults } from '../store/calculatorSlice';
+import React from "react";
+import { useSelector } from "react-redux";
+import CalculationItem from "./CalculationItem";
+import { selectResults } from "../store/calculatorSlice";
 
 const RightSidebar: React.FC = () => {
   const results = useSelector(selectResults);
 
   const calculations = [
-    { label: 'Installed Power', value: results.installedPower, unit: 'kW' },
-    { label: 'Total Flow', value: results.totalFlow, unit: 'm³/h' },
-    { label: 'Energy Consumption', value: results.energyConsumption, unit: 'kWh/day' },
+    { label: "Installed Power", value: results.installedPower, unit: "kW" },
+    { label: "Total Flow", value: results.totalFlow, unit: "m³/h" },
+    {
+      label: "Energy Consumption",
+      value: results.energyConsumption,
+      unit: "kWh/day",
+    },
   ];
 
   return (
