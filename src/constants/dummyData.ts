@@ -27,4 +27,12 @@ export const dummyModules: ModuleData[] = [
     ],
     formula: "To be defined",
   },
+  {
+    title: "NTF Value Finder (NTF)",
+    inputs: [
+        { label: "A", value: 0, unit: "", type: InputType.FREQUENT },
+        { label: "B", value: 0, unit: "", type: InputType.FREQUENT },
+    ],
+    formula: "X = \\frac{A}{b}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
+  }
 ];
