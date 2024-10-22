@@ -13,11 +13,7 @@ import FormulaEditor from "../FormulaEditor";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import { Input, InputType } from "../../types/moduleTypes";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  updateModuleInput,
-  debouncedCalculateResults,
-} from "../../store/calculatorSlice";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import InputField from "../InputField";
 
@@ -36,39 +32,9 @@ const Module: React.FC<ModuleProps> = ({
   isFormulaView,
   moduleIndex,
 }) => {
-  const dispatch = useDispatch();
   const moduleInputs = useSelector(
     (state: RootState) => state.calculator.modules[moduleIndex].inputs
   );
-
-  const handleInputChange = (inputIndex: number, newValue: string) => {
-    const input = moduleInputs[inputIndex];
-    let parsedValue = parseFloat(newValue);
-
-    if (isNaN(parsedValue)) {
-      parsedValue = 0;
-    }
-
-    if (input.validation) {
-      if (
-        input.validation.min !== undefined &&
-        parsedValue < input.validation.min
-      ) {
-        parsedValue = input.validation.min;
-      }
-      if (
-        input.validation.max !== undefined &&
-        parsedValue > input.validation.max
-      ) {
-        parsedValue = input.validation.max;
-      }
-    }
-
-    dispatch(
-      updateModuleInput({ moduleIndex, inputIndex, value: parsedValue })
-    );
-    debouncedCalculateResults(dispatch);
-  };
 
   const frequentInputs = moduleInputs.filter(
     (input) => input.type === InputType.FREQUENT
@@ -128,9 +94,6 @@ const Module: React.FC<ModuleProps> = ({
                   unit={input.unit}
                   moduleIndex={moduleIndex}
                   inputIndex={moduleInputs.indexOf(input)}
-                  onChange={(newValue) =>
-                    handleInputChange(moduleInputs.indexOf(input), newValue)
-                  }
                 />
               </div>
             ))}

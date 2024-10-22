@@ -16,7 +16,6 @@ interface InputFieldProps {
   inputIndex?: number;
   constantIndex?: number;
   className?: string;
-  onChange?: (value: string) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -27,14 +26,11 @@ const InputField: React.FC<InputFieldProps> = ({
   inputIndex,
   constantIndex,
   className,
-  onChange,
 }) => {
   const dispatch = useDispatch();
 
   const handleInputChange = (newValue: string) => {
-    if (onChange) {
-      onChange(newValue);
-    } else if (moduleIndex !== undefined && inputIndex !== undefined) {
+    if (moduleIndex !== undefined && inputIndex !== undefined) {
       dispatch(updateModuleInput({ moduleIndex, inputIndex, value: newValue }));
     } else if (constantIndex !== undefined) {
       dispatch(
