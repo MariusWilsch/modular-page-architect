@@ -23,7 +23,6 @@ import { RootState } from "../../store";
 interface ModuleProps {
   title: string;
   inputs: Input[];
-  advancedInputs?: Input[];
   formula: string;
   isFormulaView: boolean;
   moduleIndex: number;
@@ -32,7 +31,6 @@ interface ModuleProps {
 const Module: React.FC<ModuleProps> = ({
   title,
   inputs,
-  advancedInputs,
   formula,
   isFormulaView,
   moduleIndex,
@@ -41,12 +39,9 @@ const Module: React.FC<ModuleProps> = ({
   const moduleInputs = useSelector(
     (state: RootState) => state.calculator.modules[moduleIndex].inputs
   );
-  const moduleAdvancedInputs = useSelector(
-    (state: RootState) => state.calculator.modules[moduleIndex].advancedInputs
-  );
 
-  const handleInputChange = (inputIndex: number, newValue: string, isAdvanced: boolean = false) => {
-    const input = isAdvanced ? moduleAdvancedInputs[inputIndex] : moduleInputs[inputIndex];
+  const handleInputChange = (inputIndex: number, newValue: string) => {
+    const input = moduleInputs[inputIndex];
     let parsedValue = parseFloat(newValue);
 
     if (isNaN(parsedValue)) {
@@ -62,7 +57,7 @@ const Module: React.FC<ModuleProps> = ({
       }
     }
 
-    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: parsedValue, isAdvanced }));
+    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: parsedValue }));
     debouncedCalculateResults(dispatch);
   };
 
@@ -112,15 +107,6 @@ const Module: React.FC<ModuleProps> = ({
                   />
                 </div>
               ))}
-              {moduleAdvancedInputs && moduleAdvancedInputs.map((input, index) => (
-                <div key={`advanced-${index}`} className="mb-1">
-                  <InlineMath
-                    math={`${input.label} = ${input.value || 0}${
-                      input.unit ? ` \\text{${input.unit}}` : ""
-                    }`}
-                  />
-                </div>
-              ))}
             </div>
           </div>
         ) : (
@@ -150,41 +136,21 @@ const Module: React.FC<ModuleProps> = ({
                     </div>
                   )}
                 </div>
+                {input.example && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Example: {input.example}
+                  </p>
+                )}
               </div>
             ))}
-            {(rareInputs.length > 0 || (moduleAdvancedInputs && moduleAdvancedInputs.length > 0)) && (
+            {rareInputs.length > 0 && (
               <div className="mt-4">
                 <h4 className="text-md font-medium text-gray-700 mb-2">
-                  Advanced Settings
+                  Other Parameters
                 </h4>
                 {rareInputs.map((input, index) => (
-                  <div key={`rare-${index}`} className="text-sm text-gray-600 mb-1">
+                  <div key={index} className="text-sm text-gray-600 mb-1">
                     {input.label}: {input.value} {input.unit}
-                  </div>
-                ))}
-                {moduleAdvancedInputs && moduleAdvancedInputs.map((input, index) => (
-                  <div key={`advanced-${index}`} className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      {input.label}
-                    </label>
-                    <div className="mt-1 relative rounded-md shadow-sm">
-                      <input
-                        type="number"
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md"
-                        value={input.value}
-                        onChange={(e) =>
-                          handleInputChange(index, e.target.value, true)
-                        }
-                        min={input.validation?.min}
-                        max={input.validation?.max}
-                        step="any"
-                      />
-                      {input.unit && (
-                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                          <span className="text-gray-500 sm:text-sm">{input.unit}</span>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 ))}
               </div>
