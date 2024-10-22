@@ -16,6 +16,7 @@ interface InputFieldProps {
   inputIndex?: number;
   constantIndex?: number;
   className?: string;
+  onChange?: (value: string) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -26,11 +27,14 @@ const InputField: React.FC<InputFieldProps> = ({
   inputIndex,
   constantIndex,
   className,
+  onChange,
 }) => {
   const dispatch = useDispatch();
 
   const handleInputChange = (newValue: string) => {
-    if (moduleIndex !== undefined && inputIndex !== undefined) {
+    if (onChange) {
+      onChange(newValue);
+    } else if (moduleIndex !== undefined && inputIndex !== undefined) {
       dispatch(updateModuleInput({ moduleIndex, inputIndex, value: newValue }));
     } else if (constantIndex !== undefined) {
       dispatch(
@@ -44,21 +48,22 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div
-      className={`grid w-full max-w-sm items-center gap-1.5 relative ${className}`}
-    >
-      <Input
-        type="number"
-        id={`input-${label}`}
-        value={value}
-        onChange={(e) => handleInputChange(e.target.value)}
-        className="pr-16"
-      />
-      {unit && (
-        <span className="absolute right-3 top-9 text-sm text-gray-400">
-          {unit}
-        </span>
-      )}
+    <div className={`grid w-full max-w-sm items-center gap-1.5 ${className}`}>
+      <Label htmlFor={`input-${label}`}>{label}</Label>
+      <div className="relative">
+        <Input
+          type="number"
+          id={`input-${label}`}
+          value={value}
+          onChange={(e) => handleInputChange(e.target.value)}
+          className="pr-16"
+        />
+        {unit && (
+          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-gray-400">
+            {unit}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

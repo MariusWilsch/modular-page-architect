@@ -122,9 +122,6 @@ const Module: React.FC<ModuleProps> = ({
           <div className="space-y-4 flex-grow">
             {frequentInputs.map((input, index) => (
               <div key={index} className="mb-4">
-                <label className="block text-lg font-medium text-gray-700 mb-2">
-                  {input.label}
-                </label>
                 <InputField
                   label={input.label}
                   value={input.value}
@@ -135,11 +132,6 @@ const Module: React.FC<ModuleProps> = ({
                     handleInputChange(moduleInputs.indexOf(input), newValue)
                   }
                 />
-                {input.example && (
-                  <p className="mt-1 text-sm text-gray-500">
-                    Example: {input.example}
-                  </p>
-                )}
               </div>
             ))}
             {rareInputs.length > 0 && (
