@@ -28,7 +28,7 @@ export const dummyModules: ModuleData[] = [
     formula: "To be defined",
   },
   {
-    title: "NTF Value Finder (NTF)",
+    title: "NTF Value Finder",
     inputs: [
       {
         label: "Flow Rate",
