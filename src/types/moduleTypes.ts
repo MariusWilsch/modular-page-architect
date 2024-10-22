@@ -15,11 +15,11 @@ export interface Input {
   unit?: string;
   type: InputType;
   validation?: InputValidation;
-  example?: number;
 }
 
 export interface ModuleData {
   title: string;
   inputs: Input[];
+  advancedInputs?: Input[];
   formula: string;
 }

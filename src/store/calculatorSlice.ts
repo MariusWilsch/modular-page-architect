@@ -91,10 +91,15 @@ const calculatorSlice = createSlice({
         moduleIndex: number;
         inputIndex: number;
         value: string | number;
+        isAdvanced?: boolean;
       }>
     ) => {
-      const { moduleIndex, inputIndex, value } = action.payload;
-      state.modules[moduleIndex].inputs[inputIndex].value = value;
+      const { moduleIndex, inputIndex, value, isAdvanced } = action.payload;
+      if (isAdvanced) {
+        state.modules[moduleIndex].advancedInputs[inputIndex].value = value;
+      } else {
+        state.modules[moduleIndex].inputs[inputIndex].value = value;
+      }
     },
     updateGlobalConstant: (
       state,
