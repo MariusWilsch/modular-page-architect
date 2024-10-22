@@ -41,7 +41,23 @@ const Module: React.FC<ModuleProps> = ({
   );
 
   const handleInputChange = (inputIndex: number, newValue: string) => {
-    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: newValue }));
+    const input = moduleInputs[inputIndex];
+    let parsedValue = parseFloat(newValue);
+
+    if (isNaN(parsedValue)) {
+      parsedValue = 0;
+    }
+
+    if (input.validation) {
+      if (input.validation.min !== undefined && parsedValue < input.validation.min) {
+        parsedValue = input.validation.min;
+      }
+      if (input.validation.max !== undefined && parsedValue > input.validation.max) {
+        parsedValue = input.validation.max;
+      }
+    }
+
+    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: parsedValue }));
     debouncedCalculateResults(dispatch);
   };
 
@@ -85,7 +101,7 @@ const Module: React.FC<ModuleProps> = ({
               {moduleInputs.map((input, index) => (
                 <div key={index} className="mb-1">
                   <InlineMath
-                    math={`${input.label.split(" ")[0]} = ${input.value || 0}${
+                    math={`${input.label} = ${input.value || 0}${
                       input.unit ? ` \\text{${input.unit}}` : ""
                     }`}
                   />
@@ -102,12 +118,15 @@ const Module: React.FC<ModuleProps> = ({
                 </label>
                 <div className="relative rounded-md shadow-sm">
                   <input
-                    type="text"
+                    type="number"
                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-12 py-3 sm:text-lg border-gray-300 rounded-md bg-gray-50"
                     value={input.value}
                     onChange={(e) =>
                       handleInputChange(moduleInputs.indexOf(input), e.target.value)
                     }
+                    min={input.validation?.min}
+                    max={input.validation?.max}
+                    step="any"
                   />
                   {input.unit && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -117,6 +136,11 @@ const Module: React.FC<ModuleProps> = ({
                     </div>
                   )}
                 </div>
+                {input.example && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Example: {input.example}
+                  </p>
+                )}
               </div>
             ))}
             {rareInputs.length > 0 && (

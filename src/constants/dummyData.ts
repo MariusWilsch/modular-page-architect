@@ -30,9 +30,22 @@ export const dummyModules: ModuleData[] = [
   {
     title: "NTF Value Finder (NTF)",
     inputs: [
-        { label: "A", value: 0, unit: "", type: InputType.FREQUENT },
-        { label: "B", value: 0, unit: "", type: InputType.FREQUENT },
+      {
+        label: "Flow Rate",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+        example: 39,
+      },
+      {
+        label: "Peak Factor",
+        value: 1.3,
+        type: InputType.FREQUENT,
+        validation: { min: 1 },
+        example: 1.3,
+      },
     ],
-    formula: "X = \\frac{A}{b}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
+    formula: "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
   }
 ];
