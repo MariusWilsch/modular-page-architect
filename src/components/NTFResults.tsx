@@ -14,11 +14,17 @@ const NTFResults: React.FC = () => {
       <CardContent>
         <div className="space-y-2">
           <p>
-            <strong>Selected NTF Model:</strong> {results.selectedNTFModel}
+            <strong>Selected NTF Model:</strong>{" "}
+            {results.selectedNTFModel || "No model selected"}
           </p>
-          {results.ntfUtilizationRate !== null && (
+          {results.ntfUtilizationRate !== null && results.ntfUtilizationRate !== undefined ? (
             <p>
-              <strong>Utilization Rate:</strong> {results.ntfUtilizationRate.toFixed(2)}%
+              <strong>Utilization Rate:</strong>{" "}
+              {results.ntfUtilizationRate.toFixed(2)}%
+            </p>
+          ) : (
+            <p>
+              <strong>Utilization Rate:</strong> Not available
             </p>
           )}
         </div>
