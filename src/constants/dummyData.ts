@@ -36,16 +36,15 @@ export const dummyModules: ModuleData[] = [
         unit: "m³/h",
         type: InputType.FREQUENT,
         validation: { min: 0 },
-        example: 39,
       },
       {
         label: "Peak Factor",
-        value: 1.3,
-        type: InputType.FREQUENT,
+        value: 0,
+        type: InputType.RARE,
         validation: { min: 1 },
-        example: 1.3,
       },
     ],
-    formula: "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
-  }
+    formula:
+      "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
+  },
 ];

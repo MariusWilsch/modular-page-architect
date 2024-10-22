@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Edit } from 'lucide-react';
-import { Button } from './ui/button';
+import React, { useState } from "react";
+import { Edit } from "lucide-react";
+import { Button } from "./ui/button";
 import {
   Sheet,
   SheetContent,
@@ -9,7 +9,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import FormulaEditor from './FormulaEditor';
+import FormulaEditor from "./FormulaEditor";
+import InputField from "./InputField";
 
 interface ModuleProps {
   title: string;
@@ -18,9 +19,12 @@ interface ModuleProps {
   isFormulaView: boolean;
 }
 
-const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const Module: React.FC<ModuleProps> = ({
+  title,
+  inputs,
+  formula,
+  isFormulaView,
+}) => {
   return (
     <div className="bg-gray-100 rounded-lg p-4 shadow-md relative min-w-[250px] min-h-[200px] flex flex-col">
       <h3 className="text-xl font-semibold mb-4">{title}</h3>
@@ -28,12 +32,8 @@ const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              className={`absolute top-2 right-2 p-2 transition-colors ${
-                isHovered ? 'bg-gray-200' : ''
-              }`}
+              className="absolute top-2 right-2 p-2 transition-colors"
               variant="ghost"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
             >
               <Edit size={16} />
             </Button>
@@ -42,7 +42,8 @@ const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }
             <SheetHeader>
               <SheetTitle>Edit Formula</SheetTitle>
               <SheetDescription>
-                Modify existing formulas or create new ones using the options below.
+                Modify existing formulas or create new ones using the options
+                below.
               </SheetDescription>
             </SheetHeader>
             <FormulaEditor formula={formula} />
@@ -55,22 +56,14 @@ const Module: React.FC<ModuleProps> = ({ title, inputs, formula, isFormulaView }
         ) : (
           <div className="w-full space-y-2">
             {inputs.map((input, index) => (
-              <div key={index} className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">{input.label}</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <input
-                    type="text"
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md"
-                    value={input.value}
-                    onChange={() => {}} // We'll implement this later
-                  />
-                  {input.unit && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm">{input.unit}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <InputField
+                key={index}
+                label={input.label}
+                value={input.value}
+                unit={input.unit}
+                moduleIndex={null}
+                inputIndex={index}
+              />
             ))}
           </div>
         )}

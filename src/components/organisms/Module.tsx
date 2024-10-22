@@ -19,6 +19,7 @@ import {
   debouncedCalculateResults,
 } from "../../store/calculatorSlice";
 import { RootState } from "../../store";
+import InputField from "../InputField";
 
 interface ModuleProps {
   title: string;
@@ -49,15 +50,23 @@ const Module: React.FC<ModuleProps> = ({
     }
 
     if (input.validation) {
-      if (input.validation.min !== undefined && parsedValue < input.validation.min) {
+      if (
+        input.validation.min !== undefined &&
+        parsedValue < input.validation.min
+      ) {
         parsedValue = input.validation.min;
       }
-      if (input.validation.max !== undefined && parsedValue > input.validation.max) {
+      if (
+        input.validation.max !== undefined &&
+        parsedValue > input.validation.max
+      ) {
         parsedValue = input.validation.max;
       }
     }
 
-    dispatch(updateModuleInput({ moduleIndex, inputIndex, value: parsedValue }));
+    dispatch(
+      updateModuleInput({ moduleIndex, inputIndex, value: parsedValue })
+    );
     debouncedCalculateResults(dispatch);
   };
 
@@ -116,26 +125,16 @@ const Module: React.FC<ModuleProps> = ({
                 <label className="block text-lg font-medium text-gray-700 mb-2">
                   {input.label}
                 </label>
-                <div className="relative rounded-md shadow-sm">
-                  <input
-                    type="number"
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-12 py-3 sm:text-lg border-gray-300 rounded-md bg-gray-50"
-                    value={input.value}
-                    onChange={(e) =>
-                      handleInputChange(moduleInputs.indexOf(input), e.target.value)
-                    }
-                    min={input.validation?.min}
-                    max={input.validation?.max}
-                    step="any"
-                  />
-                  {input.unit && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <span className="text-gray-400 sm:text-lg">
-                        {input.unit}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <InputField
+                  label={input.label}
+                  value={input.value}
+                  unit={input.unit}
+                  moduleIndex={moduleIndex}
+                  inputIndex={moduleInputs.indexOf(input)}
+                  onChange={(newValue) =>
+                    handleInputChange(moduleInputs.indexOf(input), newValue)
+                  }
+                />
                 {input.example && (
                   <p className="mt-1 text-sm text-gray-500">
                     Example: {input.example}

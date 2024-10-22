@@ -1,7 +1,7 @@
 export enum InputType {
-  CONSTANT = 'constant',
-  FREQUENT = 'frequent',
-  RARE = 'rare',
+  CONSTANT = "constant",
+  FREQUENT = "frequent",
+  RARE = "rare",
 }
 
 export interface InputValidation {
