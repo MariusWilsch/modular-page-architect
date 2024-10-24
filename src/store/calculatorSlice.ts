@@ -10,8 +10,6 @@ interface CalculatorState {
     installedPower: number;
     totalFlow: number;
     energyConsumption: number;
-    selectedNTFModel: string;
-    ntfUtilizationRate: number | null;
   };
 }
 
@@ -22,18 +20,8 @@ const initialState: CalculatorState = {
     installedPower: 0,
     totalFlow: 0,
     energyConsumption: 0,
-    selectedNTFModel: "No suitable model found",
-    ntfUtilizationRate: null,
   },
 };
-
-const ntfModels = [
-  { model: "NTF50", wastewaterCapacity: 18 },
-  { model: "NTF100", wastewaterCapacity: 62 },
-  { model: "NTF200", wastewaterCapacity: 185 },
-  { model: "NTF300", wastewaterCapacity: 277 },
-  { model: "NTF400", wastewaterCapacity: 357 }
-];
 
 export const calculateResults = createAsyncThunk(
   "calculator/calculateResults",
@@ -43,8 +31,6 @@ export const calculateResults = createAsyncThunk(
 
     let totalPower = 0;
     let totalFlow = 0;
-    let selectedNTFModel = null;
-    let ntfUtilizationRate = null;
 
     modules.forEach((module) => {
       if (module.title === "Feed Pump") {
@@ -73,17 +59,6 @@ export const calculateResults = createAsyncThunk(
         const power = (Q * H * ρ * g) / (3600 * 1000 * η);
         totalPower += power;
         totalFlow += Q;
-      } else if (module.title === "NTF Value Finder (NTF)") {
-        const flowRate = Number(module.inputs.find(input => input.label === "Flow Rate")?.value) || 0;
-        const peakFactor = Number(module.inputs.find(input => input.label === "Peak Factor")?.value) || 1;
-        
-        const peakFlowRate = flowRate * peakFactor;
-        
-        selectedNTFModel = ntfModels.find(model => model.wastewaterCapacity > peakFlowRate);
-        
-        if (selectedNTFModel) {
-          ntfUtilizationRate = (peakFlowRate / selectedNTFModel.wastewaterCapacity) * 100;
-        }
       }
     });
 
@@ -93,14 +68,11 @@ export const calculateResults = createAsyncThunk(
     const roundedInstalledPower = Number(totalPower.toFixed(3));
     const roundedTotalFlow = Number(totalFlow.toFixed(3));
     const roundedEnergyConsumption = Number(energyConsumption.toFixed(3));
-    const roundedNTFUtilizationRate = ntfUtilizationRate ? Number(ntfUtilizationRate.toFixed(2)) : null;
 
     return {
       installedPower: roundedInstalledPower,
       totalFlow: roundedTotalFlow,
       energyConsumption: roundedEnergyConsumption,
-      selectedNTFModel: selectedNTFModel ? selectedNTFModel.model : "No suitable model found",
-      ntfUtilizationRate: roundedNTFUtilizationRate,
     };
   }
 );
