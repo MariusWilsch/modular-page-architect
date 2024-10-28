@@ -18,8 +18,8 @@ const RightSidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-50 p-4 overflow-y-auto border-l border-slate-200">
-      <h2 className="text-2xl font-bold mb-4 text-slate-800">Real-time Calculations</h2>
+    <aside className="w-64 bg-green-50 p-4 overflow-y-auto border-l border-green-200">
+      <h2 className="text-2xl font-bold mb-4 text-green-800">Real-time Calculations</h2>
       <div className="space-y-4">
         <NTFResults />
         {calculations.map((calc, index) => (
