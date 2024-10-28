@@ -15,6 +15,16 @@ const RightSidebar: React.FC = () => {
       value: results.energyConsumption,
       unit: "kWh/day",
     },
+    {
+      label: "Energy Mixer Power",
+      value: results.energyMixerPower,
+      unit: "kW",
+    },
+    {
+      label: "Selector Volume",
+      value: results.selectorVolume,
+      unit: "m³",
+    },
   ];
 
   return (

@@ -45,6 +45,8 @@ export const calculateResults = createAsyncThunk(
     let totalFlow = 0;
     let selectedNTFModel = null;
     let ntfUtilizationRate = null;
+    let energyMixerPower = 0;
+    let selectorVolume = 0;
 
     modules.forEach((module) => {
       if (module.title === "Feed Pump") {
@@ -73,7 +75,7 @@ export const calculateResults = createAsyncThunk(
         const power = (Q * H * ρ * g) / (3600 * 1000 * η);
         totalPower += power;
         totalFlow += Q;
-      } else if (module.title === "NTF Value Finder (NTF)") {
+      } else if (module.title === "NTF Value Finder") {
         const flowRate = Number(module.inputs.find(input => input.label === "Flow Rate")?.value) || 0;
         const peakFactor = Number(module.inputs.find(input => input.label === "Peak Factor")?.value) || 1;
         
@@ -84,23 +86,43 @@ export const calculateResults = createAsyncThunk(
         if (selectedNTFModel) {
           ntfUtilizationRate = (peakFlowRate / selectedNTFModel.wastewaterCapacity) * 100;
         }
+      } else if (module.title === "Power B70 - Energy Mixer") {
+        const mixingEnergy = Number(
+          module.inputs.find((input) => input.label === "Mixing Energy")?.value
+        ) || 0;
+        const timeB45 = Number(
+          module.inputs.find((input) => input.label === "Time B45")?.value
+        ) || 0;
+        const flowB63 = Number(
+          module.inputs.find(
+            (input) => input.label === "Flow Return Sludge (B63)"
+          )?.value
+        ) || 0;
+        const flowB53 = Number(
+          module.inputs.find((input) => input.label === "Influent Flow Bio (B53)")
+            ?.value
+        ) || 0;
+        const flowB65 = Number(
+          module.inputs.find((input) => input.label === "Recycle Flow AT (B65)")
+            ?.value
+        ) || 0;
+
+        selectorVolume = (timeB45 / 60) * (flowB63 + flowB53 + flowB65);
+        energyMixerPower = (selectorVolume * mixingEnergy) / 1000;
+        totalPower += energyMixerPower;
       }
     });
 
-    const energyConsumption = totalPower * 24; // Assuming 24 hours operation
-
-    // Round the results to 3 decimal places
-    const roundedInstalledPower = Number(totalPower.toFixed(3));
-    const roundedTotalFlow = Number(totalFlow.toFixed(3));
-    const roundedEnergyConsumption = Number(energyConsumption.toFixed(3));
-    const roundedNTFUtilizationRate = ntfUtilizationRate ? Number(ntfUtilizationRate.toFixed(2)) : null;
+    const energyConsumption = totalPower * 24;
 
     return {
-      installedPower: roundedInstalledPower,
-      totalFlow: roundedTotalFlow,
-      energyConsumption: roundedEnergyConsumption,
+      installedPower: Number(totalPower.toFixed(3)),
+      totalFlow: Number(totalFlow.toFixed(3)),
+      energyConsumption: Number(energyConsumption.toFixed(3)),
       selectedNTFModel: selectedNTFModel ? selectedNTFModel.model : "No suitable model found",
-      ntfUtilizationRate: roundedNTFUtilizationRate,
+      ntfUtilizationRate: ntfUtilizationRate ? Number(ntfUtilizationRate.toFixed(2)) : null,
+      energyMixerPower: Number(energyMixerPower.toFixed(3)),
+      selectorVolume: Number(selectorVolume.toFixed(3)),
     };
   }
 );

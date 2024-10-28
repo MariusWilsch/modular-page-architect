@@ -47,4 +47,45 @@ export const dummyModules: ModuleData[] = [
     formula:
       "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
   },
+  {
+    title: "Power B70 - Energy Mixer",
+    inputs: [
+      {
+        label: "Mixing Energy",
+        value: 0,
+        unit: "W/m³",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Time B45",
+        value: 0,
+        unit: "min",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Flow Return Sludge (B63)",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Influent Flow Bio (B53)",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Recycle Flow AT (B65)",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+    ],
+    formula: "E_{mixer} = \\frac{V_{selector} \\cdot E_{mixing}}{1000} \\quad where \\quad V_{selector} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
+  },
 ];
