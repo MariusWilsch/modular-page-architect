@@ -86,6 +86,6 @@ export const dummyModules: ModuleData[] = [
         validation: { min: 0 },
       },
     ],
-    formula: "E_{mixer} = \\frac{V_{selector} \\cdot E_{mixing}}{1000} \\quad where \\quad V_{selector} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
+    formula: "P_{B70} = \\frac{V_{B68} \\cdot E_{mixing}}{1000} \\quad \\text{where} \\quad V_{B68} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
   },
 ];

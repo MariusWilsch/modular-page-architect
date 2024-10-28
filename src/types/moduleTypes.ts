@@ -1,12 +1,6 @@
 export enum InputType {
-  CONSTANT = "constant",
-  FREQUENT = "frequent",
-  RARE = "rare",
-}
-
-export interface InputValidation {
-  min?: number;
-  max?: number;
+  FREQUENT = "FREQUENT",
+  RARE = "RARE",
 }
 
 export interface Input {
@@ -14,12 +8,24 @@ export interface Input {
   value: string | number;
   unit?: string;
   type: InputType;
-  validation?: InputValidation;
-  example?: number;
+  validation?: {
+    min?: number;
+    max?: number;
+  };
 }
 
 export interface ModuleData {
   title: string;
   inputs: Input[];
   formula: string;
+}
+
+export interface CalculatorResults {
+  installedPower: number;
+  totalFlow: number;
+  energyConsumption: number;
+  selectedNTFModel: string;
+  ntfUtilizationRate: number | null;
+  energyMixerPower: number;
+  selectorVolume: number;
 }

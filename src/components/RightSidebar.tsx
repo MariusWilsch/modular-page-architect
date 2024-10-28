@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import CalculationItem from "./CalculationItem";
 import { selectResults } from "../store/calculatorSlice";
 import NTFResults from "./NTFResults";
+import { CalculatorResults } from "../types/moduleTypes";
 
 const RightSidebar: React.FC = () => {
-  const results = useSelector(selectResults);
+  const results = useSelector(selectResults) as CalculatorResults;
 
   const calculations = [
     { label: "Installed Power", value: results.installedPower, unit: "kW" },
