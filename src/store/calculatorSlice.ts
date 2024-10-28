@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { debounce } from "lodash";
 import { RootState } from "./index";
-import { dummyModules, globalConstants } from "../constants/dummyData";
+import { dummyModules, globalConstants, powerLookupTable } from "../constants/dummyData";
 
 interface CalculatorState {
   modules: typeof dummyModules;
@@ -15,6 +15,7 @@ interface CalculatorState {
     energyMixerPower: number;
     selectorVolume: number;
     bufferTankSize: number;
+    balanceTankPower: number;
   };
 }
 
@@ -30,6 +31,7 @@ const initialState: CalculatorState = {
     energyMixerPower: 0,
     selectorVolume: 0,
     bufferTankSize: 0,
+    balanceTankPower: 0,
   },
 };
 
@@ -46,19 +48,17 @@ export const calculateResults = createAsyncThunk(
     let energyMixerPower = 0;
     let selectorVolume = 0;
     let bufferTankSize = 0;
-
-    // Calculate volume first
-    const volumeModule = modules.find(m => m.title === "Volume Calculator (B68)");
-    if (volumeModule) {
-      const timeB45 = Number(volumeModule.inputs.find(i => i.label === "Time (B45)")?.value) || 0;
-      const flowB63 = Number(volumeModule.inputs.find(i => i.label === "Flow Return Sludge (B63)")?.value) || 0;
-      const flowB53 = Number(volumeModule.inputs.find(i => i.label === "Influent Flow Bio (B53)")?.value) || 0;
-      const flowB65 = Number(volumeModule.inputs.find(i => i.label === "Recycle Flow AT (B65)")?.value) || 0;
-
-      selectorVolume = (timeB45 / 60) * (flowB63 + flowB53 + flowB65);
-    }
+    let balanceTankPower = 0;
 
     modules.forEach((module) => {
+      if (module.title === "Power Calculation for Balance Tank (N46)") {
+        const tankSize = Number(module.inputs.find(i => i.label === "Tank Size (F51)")?.value) || 1;
+        const powerEntry = powerLookupTable.find(entry => entry.id === tankSize);
+        if (powerEntry) {
+          balanceTankPower = powerEntry.power;
+          totalPower += balanceTankPower;
+        }
+      }
       if (module.title === "Feed Pump") {
         const Q = Number(module.inputs.find(input => input.label === "Flow rate (Q)")?.value) || 0;
         const H = Number(module.inputs.find(input => input.label === "Head (H)")?.value) || 0;
@@ -125,6 +125,7 @@ export const calculateResults = createAsyncThunk(
       energyMixerPower: Number(energyMixerPower.toFixed(3)),
       selectorVolume: Number(selectorVolume.toFixed(3)),
       bufferTankSize: Number(bufferTankSize.toFixed(3)),
+      balanceTankPower: Number(balanceTankPower.toFixed(3)),
     };
   }
 );

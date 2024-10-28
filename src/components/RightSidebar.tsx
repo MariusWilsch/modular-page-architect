@@ -31,6 +31,11 @@ const RightSidebar: React.FC = () => {
       value: results.bufferTankSize,
       unit: "m³",
     },
+    {
+      label: "Balance Tank Power",
+      value: results.balanceTankPower,
+      unit: "kW",
+    },
   ];
 
   return (

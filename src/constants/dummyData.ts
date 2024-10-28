@@ -5,6 +5,15 @@ export const globalConstants = [
   { label: "Gravity (g)", value: 9.81, unit: "m/s²" },
 ];
 
+// Lookup table for power calculations
+export const powerLookupTable = [
+  { id: 1, power: 0.75 },
+  { id: 2, power: 1.1 },
+  { id: 3, power: 1.5 },
+  { id: 4, power: 2.2 },
+  { id: 5, power: 3.0 },
+];
+
 export const dummyModules: ModuleData[] = [
   {
     title: "Feed Pump",
@@ -147,5 +156,17 @@ export const dummyModules: ModuleData[] = [
       },
     ],
     formula: "I = \\frac{X}{Y} \\quad \\text{where} \\quad X = \\begin{cases} C \\cdot D & \\text{if } (A - B) < 3 \\\\ \\frac{E}{F} \\cdot (F - B) & \\text{otherwise} \\end{cases}",
+  },
+  {
+    title: "Power Calculation for Balance Tank (N46)",
+    inputs: [
+      {
+        label: "Tank Size (F51)",
+        value: 1,
+        type: InputType.FREQUENT,
+        validation: { min: 1, max: 5 },
+      }
+    ],
+    formula: "P = LOOKUP(F51, PowerTable)",
   },
 ];

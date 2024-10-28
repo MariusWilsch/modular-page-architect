@@ -29,4 +29,5 @@ export interface CalculatorResults {
   energyMixerPower: number;
   selectorVolume: number;
   bufferTankSize: number;
+  balanceTankPower: number;
 }
