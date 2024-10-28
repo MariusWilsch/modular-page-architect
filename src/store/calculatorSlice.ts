@@ -48,29 +48,24 @@ export const calculateResults = createAsyncThunk(
     let energyMixerPower = 0;
     let selectorVolume = 0;
 
+    // Calculate volume first
+    const volumeModule = modules.find(m => m.title === "Volume Calculator (B68)");
+    if (volumeModule) {
+      const timeB45 = Number(volumeModule.inputs.find(i => i.label === "Time (B45)")?.value) || 0;
+      const flowB63 = Number(volumeModule.inputs.find(i => i.label === "Flow Return Sludge (B63)")?.value) || 0;
+      const flowB53 = Number(volumeModule.inputs.find(i => i.label === "Influent Flow Bio (B53)")?.value) || 0;
+      const flowB65 = Number(volumeModule.inputs.find(i => i.label === "Recycle Flow AT (B65)")?.value) || 0;
+
+      selectorVolume = (timeB45 / 60) * (flowB63 + flowB53 + flowB65);
+    }
+
     modules.forEach((module) => {
       if (module.title === "Feed Pump") {
-        const Q =
-          Number(
-            module.inputs.find((input) => input.label === "Flow rate (Q)")
-              ?.value
-          ) || 0;
-        const H =
-          Number(
-            module.inputs.find((input) => input.label === "Head (H)")?.value
-          ) || 0;
-        const η =
-          Number(
-            module.inputs.find((input) => input.label === "Efficiency (η)")
-              ?.value
-          ) || 0;
-        const ρ =
-          globalConstants.find(
-            (constant) => constant.label === "Water Density (ρ)"
-          )?.value || 0;
-        const g =
-          globalConstants.find((constant) => constant.label === "Gravity (g)")
-            ?.value || 0;
+        const Q = Number(module.inputs.find(input => input.label === "Flow rate (Q)")?.value) || 0;
+        const H = Number(module.inputs.find(input => input.label === "Head (H)")?.value) || 0;
+        const η = Number(module.inputs.find(input => input.label === "Efficiency (η)")?.value) || 0;
+        const ρ = globalConstants.find(constant => constant.label === "Water Density (ρ)")?.value || 0;
+        const g = globalConstants.find(constant => constant.label === "Gravity (g)")?.value || 0;
 
         const power = (Q * H * ρ * g) / (3600 * 1000 * η);
         totalPower += power;
@@ -81,33 +76,21 @@ export const calculateResults = createAsyncThunk(
         
         const peakFlowRate = flowRate * peakFactor;
         
+        const ntfModels = [
+          { model: "NTF50", wastewaterCapacity: 18 },
+          { model: "NTF100", wastewaterCapacity: 62 },
+          { model: "NTF200", wastewaterCapacity: 185 },
+          { model: "NTF300", wastewaterCapacity: 277 },
+          { model: "NTF400", wastewaterCapacity: 357 }
+        ];
+        
         selectedNTFModel = ntfModels.find(model => model.wastewaterCapacity > peakFlowRate);
         
         if (selectedNTFModel) {
           ntfUtilizationRate = (peakFlowRate / selectedNTFModel.wastewaterCapacity) * 100;
         }
       } else if (module.title === "Power B70 - Energy Mixer") {
-        const mixingEnergy = Number(
-          module.inputs.find((input) => input.label === "Mixing Energy")?.value
-        ) || 0;
-        const timeB45 = Number(
-          module.inputs.find((input) => input.label === "Time B45")?.value
-        ) || 0;
-        const flowB63 = Number(
-          module.inputs.find(
-            (input) => input.label === "Flow Return Sludge (B63)"
-          )?.value
-        ) || 0;
-        const flowB53 = Number(
-          module.inputs.find((input) => input.label === "Influent Flow Bio (B53)")
-            ?.value
-        ) || 0;
-        const flowB65 = Number(
-          module.inputs.find((input) => input.label === "Recycle Flow AT (B65)")
-            ?.value
-        ) || 0;
-
-        selectorVolume = (timeB45 / 60) * (flowB63 + flowB53 + flowB65);
+        const mixingEnergy = Number(module.inputs.find(input => input.label === "Mixing Energy")?.value) || 0;
         energyMixerPower = (selectorVolume * mixingEnergy) / 1000;
         totalPower += energyMixerPower;
       }

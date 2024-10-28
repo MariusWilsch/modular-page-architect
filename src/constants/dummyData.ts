@@ -48,17 +48,10 @@ export const dummyModules: ModuleData[] = [
       "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
   },
   {
-    title: "Power B70 - Energy Mixer",
+    title: "Volume Calculator (B68)",
     inputs: [
       {
-        label: "Mixing Energy",
-        value: 0,
-        unit: "W/m³",
-        type: InputType.FREQUENT,
-        validation: { min: 0 },
-      },
-      {
-        label: "Time B45",
+        label: "Time (B45)",
         value: 0,
         unit: "min",
         type: InputType.FREQUENT,
@@ -86,6 +79,19 @@ export const dummyModules: ModuleData[] = [
         validation: { min: 0 },
       },
     ],
-    formula: "P_{B70} = \\frac{V_{B68} \\cdot E_{mixing}}{1000} \\quad \\text{where} \\quad V_{B68} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
+    formula: "V_{B68} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
+  },
+  {
+    title: "Power B70 - Energy Mixer",
+    inputs: [
+      {
+        label: "Mixing Energy",
+        value: 0,
+        unit: "W/m³",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+    ],
+    formula: "P_{B70} = \\frac{V_{B68} \\cdot E_{mixing}}{1000}",
   },
 ];
