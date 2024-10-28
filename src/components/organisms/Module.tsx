@@ -44,13 +44,13 @@ const Module: React.FC<ModuleProps> = ({
   );
 
   return (
-    <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-full">
-      <h3 className="text-2xl font-semibold mb-6">{title}</h3>
+    <div className="bg-gray-100 rounded-lg p-6 shadow-md relative flex flex-col h-auto min-h-[200px] w-full">
+      <h3 className="text-2xl font-semibold mb-6 break-words">{title}</h3>
       {isFormulaView && (
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              className={`absolute top-4 right-4 p-2 transition-colors hover:bg-gray-200`}
+              className="absolute top-4 right-4 p-2 transition-colors hover:bg-gray-200"
               variant="ghost"
             >
               <Edit size={20} />
@@ -71,10 +71,12 @@ const Module: React.FC<ModuleProps> = ({
       <div className="flex-grow flex flex-col">
         {isFormulaView ? (
           <div className="flex flex-col items-center justify-center flex-grow">
-            <BlockMath math={formula} />
-            <div className="mt-4 text-sm text-gray-600">
+            <div className="w-full overflow-x-auto px-2">
+              <BlockMath math={formula} />
+            </div>
+            <div className="mt-4 text-sm text-gray-600 w-full">
               {moduleInputs.map((input, index) => (
-                <div key={index} className="mb-1">
+                <div key={index} className="mb-1 break-words">
                   <InlineMath
                     math={`${input.label} = ${input.value || 0}${
                       input.unit ? ` \\text{${input.unit}}` : ""
@@ -103,7 +105,7 @@ const Module: React.FC<ModuleProps> = ({
                   Other Parameters
                 </h4>
                 {rareInputs.map((input, index) => (
-                  <div key={index} className="text-sm text-gray-600 mb-1">
+                  <div key={index} className="text-sm text-gray-600 mb-1 break-words">
                     {input.label}: {input.value} {input.unit}
                   </div>
                 ))}
