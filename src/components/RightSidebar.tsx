@@ -26,6 +26,11 @@ const RightSidebar: React.FC = () => {
       value: results.selectorVolume,
       unit: "m³",
     },
+    {
+      label: "Buffer Tank Size",
+      value: results.bufferTankSize,
+      unit: "m³",
+    },
   ];
 
   return (

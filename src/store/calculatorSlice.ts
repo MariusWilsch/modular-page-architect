@@ -12,6 +12,9 @@ interface CalculatorState {
     energyConsumption: number;
     selectedNTFModel: string;
     ntfUtilizationRate: number | null;
+    energyMixerPower: number;
+    selectorVolume: number;
+    bufferTankSize: number;
   };
 }
 
@@ -24,16 +27,11 @@ const initialState: CalculatorState = {
     energyConsumption: 0,
     selectedNTFModel: "No suitable model found",
     ntfUtilizationRate: null,
+    energyMixerPower: 0,
+    selectorVolume: 0,
+    bufferTankSize: 0,
   },
 };
-
-const ntfModels = [
-  { model: "NTF50", wastewaterCapacity: 18 },
-  { model: "NTF100", wastewaterCapacity: 62 },
-  { model: "NTF200", wastewaterCapacity: 185 },
-  { model: "NTF300", wastewaterCapacity: 277 },
-  { model: "NTF400", wastewaterCapacity: 357 }
-];
 
 export const calculateResults = createAsyncThunk(
   "calculator/calculateResults",
@@ -47,6 +45,7 @@ export const calculateResults = createAsyncThunk(
     let ntfUtilizationRate = null;
     let energyMixerPower = 0;
     let selectorVolume = 0;
+    let bufferTankSize = 0;
 
     // Calculate volume first
     const volumeModule = modules.find(m => m.title === "Volume Calculator (B68)");
@@ -93,6 +92,25 @@ export const calculateResults = createAsyncThunk(
         const mixingEnergy = Number(module.inputs.find(input => input.label === "Mixing Energy")?.value) || 0;
         energyMixerPower = (selectorVolume * mixingEnergy) / 1000;
         totalPower += energyMixerPower;
+      } else if (module.title === "Buffer Tank Size Calculator (N43)") {
+        const A = Number(module.inputs.find(i => i.label === "Running Hours Water Treatment After BT (F54)")?.value) || 0;
+        const B = Number(module.inputs.find(i => i.label === "Incoming Water Hours (F44)")?.value) || 0;
+        const C = Number(module.inputs.find(i => i.label === "Flow (F43)")?.value) || 0;
+        const D = Number(module.inputs.find(i => i.label === "Minimal Residence Time (F46)")?.value) || 0;
+        const E = Number(module.inputs.find(i => i.label === "Flow (F42)")?.value) || 0;
+        const F = Number(module.inputs.find(i => i.label === "Running Hours Water Treatment After BT (F45)")?.value) || 0;
+        const Y = Number(module.inputs.find(i => i.label === "Netto/Bruto (F49)")?.value) || 1;
+
+        // Calculate X based on conditions
+        let X;
+        if ((A - B) < 3) {
+          X = C * D;
+        } else {
+          X = (E / F) * (F - B);
+        }
+
+        // Calculate buffer tank size
+        bufferTankSize = X / Y;
       }
     });
 
@@ -106,6 +124,7 @@ export const calculateResults = createAsyncThunk(
       ntfUtilizationRate: ntfUtilizationRate ? Number(ntfUtilizationRate.toFixed(2)) : null,
       energyMixerPower: Number(energyMixerPower.toFixed(3)),
       selectorVolume: Number(selectorVolume.toFixed(3)),
+      bufferTankSize: Number(bufferTankSize.toFixed(3)),
     };
   }
 );

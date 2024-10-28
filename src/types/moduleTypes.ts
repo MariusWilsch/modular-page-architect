@@ -28,4 +28,5 @@ export interface CalculatorResults {
   ntfUtilizationRate: number | null;
   energyMixerPower: number;
   selectorVolume: number;
+  bufferTankSize: number;
 }

@@ -94,4 +94,58 @@ export const dummyModules: ModuleData[] = [
     ],
     formula: "P_{B70} = \\frac{V_{B68} \\cdot E_{mixing}}{1000}",
   },
+  {
+    title: "Buffer Tank Size Calculator (N43)",
+    inputs: [
+      {
+        label: "Running Hours Water Treatment After BT (F54)",
+        value: 0,
+        unit: "h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Incoming Water Hours (F44)",
+        value: 0,
+        unit: "h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Flow (F43)",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Minimal Residence Time (F46)",
+        value: 0,
+        unit: "h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Flow (F42)",
+        value: 0,
+        unit: "m³/h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Running Hours Water Treatment After BT (F45)",
+        value: 0,
+        unit: "h",
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Netto/Bruto (F49)",
+        value: 0,
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+    ],
+    formula: "I = \\frac{X}{Y} \\quad \\text{where} \\quad X = \\begin{cases} C \\cdot D & \\text{if } (A - B) < 3 \\\\ \\frac{E}{F} \\cdot (F - B) & \\text{otherwise} \\end{cases}",
+  },
 ];
