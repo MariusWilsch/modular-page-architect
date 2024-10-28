@@ -106,13 +106,13 @@ export const dummyModules: ModuleData[] = [
   {
     title: "Buffer Tank Size Calculator (N43)",
     inputs: [
-      {
-        label: "Running Hours Water Treatment After BT (F54)",
-        value: 0,
-        unit: "h",
-        type: InputType.FREQUENT,
-        validation: { min: 0 },
-      },
+      // {
+      //   label: "Running Hours Water Treatment After BT (F54)",
+      //   value: 0,
+      //   unit: "h",
+      //   type: InputType.FREQUENT,
+      //   validation: { min: 0 },
+      // },
       {
         label: "Incoming Water Hours (F44)",
         value: 0,
