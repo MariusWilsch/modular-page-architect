@@ -5,6 +5,7 @@ import { dummyModules, globalConstants, powerLookupTable, comparisonLookupTables
 import { calculatePowerResults } from "./sliceHelpers/powerCalculations";
 import { calculateVolumeResults } from "./sliceHelpers/volumeCalculations";
 import { calculateComparisonResults } from "./sliceHelpers/comparisonCalculations";
+import { calculateNTFResults } from "./sliceHelpers/ntfCalculations";
 
 interface CalculatorState {
   modules: typeof dummyModules;
@@ -40,19 +41,6 @@ const initialState: CalculatorState = {
   },
 };
 
-// Helper function for XLOOKUP-like functionality
-const xlookup = (lookupValue: number, lookupArray: number[], returnArray: number[]): number | null => {
-  if (!lookupArray.length || !returnArray.length) return null;
-  
-  // Find the exact match or next larger value
-  for (let i = 0; i < lookupArray.length; i++) {
-    if (lookupArray[i] >= lookupValue) {
-      return returnArray[i];
-    }
-  }
-  return returnArray[returnArray.length - 1];
-};
-
 export const calculateResults = createAsyncThunk(
   "calculator/calculateResults",
   async (_, { getState }) => {
@@ -62,7 +50,8 @@ export const calculateResults = createAsyncThunk(
     const results = {
       ...calculatePowerResults(modules, globalConstants, powerLookupTable),
       ...calculateVolumeResults(modules),
-      ...calculateComparisonResults(modules, comparisonLookupTables)
+      ...calculateComparisonResults(modules, comparisonLookupTables),
+      ...calculateNTFResults(modules),
     };
 
     return {
@@ -75,6 +64,7 @@ export const calculateResults = createAsyncThunk(
       bufferTankSize: Number(results.bufferTankSize.toFixed(3)),
       balanceTankPower: Number(results.balanceTankPower.toFixed(3)),
       comparisonResult: results.comparisonResult !== null ? Number(results.comparisonResult.toFixed(3)) : null,
+      ntfUtilizationRate: results.ntfUtilizationRate !== null ? Number(results.ntfUtilizationRate.toFixed(2)) : null,
     };
   }
 );
@@ -113,12 +103,10 @@ const calculatorSlice = createSlice({
   },
 });
 
-export const { updateModuleInput, updateGlobalConstant } =
-  calculatorSlice.actions;
+export const { updateModuleInput, updateGlobalConstant } = calculatorSlice.actions;
 
 export const selectModules = (state: RootState) => state.calculator.modules;
-export const selectGlobalConstants = (state: RootState) =>
-  state.calculator.globalConstants;
+export const selectGlobalConstants = (state: RootState) => state.calculator.globalConstants;
 export const selectResults = (state: RootState) => state.calculator.results;
 
 export { debouncedCalculateResults };
