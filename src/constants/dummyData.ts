@@ -14,6 +14,20 @@ export const powerLookupTable = [
   { id: 5, power: 3.0 },
 ];
 
+// Lookup tables for comparison calculations
+export const comparisonLookupTables = {
+  table1: {
+    lookupArray: [], // AM111:AM121
+    returnArray: [], // AJ111:AJ121
+    description: "Please input comma-separated values for the first lookup table (AM111:AM121 and AJ111:AJ121)"
+  },
+  table2: {
+    lookupArray: [], // AN111:AN121
+    returnArray: [], // AJ111:AJ121 (same as table1)
+    description: "Please input comma-separated values for the second lookup table (AN111:AN121)"
+  }
+};
+
 export const dummyModules: ModuleData[] = [
   {
     title: "Feed Pump",
@@ -168,5 +182,41 @@ export const dummyModules: ModuleData[] = [
       }
     ],
     formula: "P = LOOKUP(F51, PowerTable)",
+  },
+  {
+    title: "Equipment Comparison Calculator",
+    inputs: [
+      {
+        label: "First Value (V44)",
+        value: 0,
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Second Value (V46)",
+        value: 0,
+        type: InputType.FREQUENT,
+        validation: { min: 0 },
+      },
+      {
+        label: "Table 1 Lookup Values (AM111:AM121)",
+        value: "",
+        type: InputType.RARE,
+        description: "Enter comma-separated values for lookup array",
+      },
+      {
+        label: "Table 1 Return Values (AJ111:AJ121)",
+        value: "",
+        type: InputType.RARE,
+        description: "Enter comma-separated values for return array",
+      },
+      {
+        label: "Table 2 Lookup Values (AN111:AN121)",
+        value: "",
+        type: InputType.RARE,
+        description: "Enter comma-separated values for second lookup array",
+      }
+    ],
+    formula: "Result = \\max(X_{43}, Z_{43}) \\quad \\text{where} \\quad X_{43} = XLOOKUP(V_{44}) \\quad \\text{and} \\quad Z_{43} = XLOOKUP(V_{46})",
   },
 ];

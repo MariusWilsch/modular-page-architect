@@ -12,6 +12,7 @@ export interface Input {
     min?: number;
     max?: number;
   };
+  description?: string;
 }
 
 export interface ModuleData {
@@ -30,4 +31,5 @@ export interface CalculatorResults {
   selectorVolume: number;
   bufferTankSize: number;
   balanceTankPower: number;
+  comparisonResult: number | null;
 }

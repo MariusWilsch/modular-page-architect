@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { debounce } from "lodash";
 import { RootState } from "./index";
-import { dummyModules, globalConstants, powerLookupTable } from "../constants/dummyData";
+import { dummyModules, globalConstants, powerLookupTable, comparisonLookupTables } from "../constants/dummyData";
 
 interface CalculatorState {
   modules: typeof dummyModules;
@@ -16,6 +16,7 @@ interface CalculatorState {
     selectorVolume: number;
     bufferTankSize: number;
     balanceTankPower: number;
+    comparisonResult: number | null;
   };
 }
 
@@ -32,7 +33,21 @@ const initialState: CalculatorState = {
     selectorVolume: 0,
     bufferTankSize: 0,
     balanceTankPower: 0,
+    comparisonResult: null,
   },
+};
+
+// Helper function for XLOOKUP-like functionality
+const xlookup = (lookupValue: number, lookupArray: number[], returnArray: number[]): number | null => {
+  if (!lookupArray.length || !returnArray.length) return null;
+  
+  // Find the exact match or next larger value
+  for (let i = 0; i < lookupArray.length; i++) {
+    if (lookupArray[i] >= lookupValue) {
+      return returnArray[i];
+    }
+  }
+  return returnArray[returnArray.length - 1];
 };
 
 export const calculateResults = createAsyncThunk(
@@ -49,6 +64,8 @@ export const calculateResults = createAsyncThunk(
     let selectorVolume = 0;
     let bufferTankSize = 0;
     let balanceTankPower = 0;
+
+    let comparisonResult: number | null = null;
 
     modules.forEach((module) => {
       if (module.title === "Power Calculation for Balance Tank (N46)") {
@@ -111,6 +128,26 @@ export const calculateResults = createAsyncThunk(
 
         // Calculate buffer tank size
         bufferTankSize = X / Y;
+      } else if (module.title === "Equipment Comparison Calculator") {
+        const v44 = Number(module.inputs.find(i => i.label === "First Value (V44)")?.value) || 0;
+        const v46 = Number(module.inputs.find(i => i.label === "Second Value (V46)")?.value) || 0;
+        
+        // Get lookup table values
+        const table1LookupStr = module.inputs.find(i => i.label === "Table 1 Lookup Values (AM111:AM121)")?.value as string;
+        const table1ReturnStr = module.inputs.find(i => i.label === "Table 1 Return Values (AJ111:AJ121)")?.value as string;
+        const table2LookupStr = module.inputs.find(i => i.label === "Table 2 Lookup Values (AN111:AN121)")?.value as string;
+
+        // Convert string inputs to number arrays
+        const table1Lookup = table1LookupStr.split(',').map(Number).filter(n => !isNaN(n));
+        const table1Return = table1ReturnStr.split(',').map(Number).filter(n => !isNaN(n));
+        const table2Lookup = table2LookupStr.split(',').map(Number).filter(n => !isNaN(n));
+
+        // Perform XLOOKUP operations
+        const x43 = xlookup(v44, table1Lookup, table1Return) || 0;
+        const z43 = xlookup(v46, table2Lookup, table1Return) || 0;
+
+        // Compare results
+        comparisonResult = Math.max(x43, z43);
       }
     });
 
@@ -126,6 +163,7 @@ export const calculateResults = createAsyncThunk(
       selectorVolume: Number(selectorVolume.toFixed(3)),
       bufferTankSize: Number(bufferTankSize.toFixed(3)),
       balanceTankPower: Number(balanceTankPower.toFixed(3)),
+      comparisonResult: comparisonResult !== null ? Number(comparisonResult.toFixed(3)) : null,
     };
   }
 );

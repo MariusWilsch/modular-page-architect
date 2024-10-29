@@ -36,6 +36,11 @@ const RightSidebar: React.FC = () => {
       value: results.balanceTankPower,
       unit: "kW",
     },
+    {
+      label: "Equipment Comparison Result",
+      value: results.comparisonResult || 0,
+      unit: "",
+    },
   ];
 
   return (
