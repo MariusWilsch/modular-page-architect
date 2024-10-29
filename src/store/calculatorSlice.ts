@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { debounce } from "lodash";
 import { RootState } from "./index";
 import { dummyModules, globalConstants, powerLookupTable, comparisonLookupTables } from "../constants/dummyData";
+import { calculatePowerResults } from "./sliceHelpers/powerCalculations";
+import { calculateVolumeResults } from "./sliceHelpers/volumeCalculations";
+import { calculateComparisonResults } from "./sliceHelpers/comparisonCalculations";
 
 interface CalculatorState {
   modules: typeof dummyModules;
@@ -56,114 +59,22 @@ export const calculateResults = createAsyncThunk(
     const state = getState() as RootState;
     const { modules, globalConstants } = state.calculator;
 
-    let totalPower = 0;
-    let totalFlow = 0;
-    let selectedNTFModel = null;
-    let ntfUtilizationRate = null;
-    let energyMixerPower = 0;
-    let selectorVolume = 0;
-    let bufferTankSize = 0;
-    let balanceTankPower = 0;
-
-    let comparisonResult: number | null = null;
-
-    modules.forEach((module) => {
-      if (module.title === "Power Calculation for Balance Tank (N46)") {
-        const tankSize = Number(module.inputs.find(i => i.label === "Tank Size (F51)")?.value) || 1;
-        const powerEntry = powerLookupTable.find(entry => entry.id === tankSize);
-        if (powerEntry) {
-          balanceTankPower = powerEntry.power;
-          totalPower += balanceTankPower;
-        }
-      }
-      if (module.title === "Feed Pump") {
-        const Q = Number(module.inputs.find(input => input.label === "Flow rate (Q)")?.value) || 0;
-        const H = Number(module.inputs.find(input => input.label === "Head (H)")?.value) || 0;
-        const η = Number(module.inputs.find(input => input.label === "Efficiency (η)")?.value) || 0;
-        const ρ = globalConstants.find(constant => constant.label === "Water Density (ρ)")?.value || 0;
-        const g = globalConstants.find(constant => constant.label === "Gravity (g)")?.value || 0;
-
-        const power = (Q * H * ρ * g) / (3600 * 1000 * η);
-        totalPower += power;
-        totalFlow += Q;
-      } else if (module.title === "NTF Value Finder") {
-        const flowRate = Number(module.inputs.find(input => input.label === "Flow Rate")?.value) || 0;
-        const peakFactor = Number(module.inputs.find(input => input.label === "Peak Factor")?.value) || 1;
-        
-        const peakFlowRate = flowRate * peakFactor;
-        
-        const ntfModels = [
-          { model: "NTF50", wastewaterCapacity: 18 },
-          { model: "NTF100", wastewaterCapacity: 62 },
-          { model: "NTF200", wastewaterCapacity: 185 },
-          { model: "NTF300", wastewaterCapacity: 277 },
-          { model: "NTF400", wastewaterCapacity: 357 }
-        ];
-        
-        selectedNTFModel = ntfModels.find(model => model.wastewaterCapacity > peakFlowRate);
-        
-        if (selectedNTFModel) {
-          ntfUtilizationRate = (peakFlowRate / selectedNTFModel.wastewaterCapacity) * 100;
-        }
-      } else if (module.title === "Power B70 - Energy Mixer") {
-        const mixingEnergy = Number(module.inputs.find(input => input.label === "Mixing Energy")?.value) || 0;
-        energyMixerPower = (selectorVolume * mixingEnergy) / 1000;
-        totalPower += energyMixerPower;
-      } else if (module.title === "Buffer Tank Size Calculator (N43)") {
-        const A = Number(module.inputs.find(i => i.label === "Running Hours Water Treatment After BT (F54)")?.value) || 0;
-        const B = Number(module.inputs.find(i => i.label === "Incoming Water Hours (F44)")?.value) || 0;
-        const C = Number(module.inputs.find(i => i.label === "Flow (F43)")?.value) || 0;
-        const D = Number(module.inputs.find(i => i.label === "Minimal Residence Time (F46)")?.value) || 0;
-        const E = Number(module.inputs.find(i => i.label === "Flow (F42)")?.value) || 0;
-        const F = Number(module.inputs.find(i => i.label === "Running Hours Water Treatment After BT (F45)")?.value) || 0;
-        const Y = Number(module.inputs.find(i => i.label === "Netto/Bruto (F49)")?.value) || 1;
-
-        // Calculate X based on conditions
-        let X;
-        if ((A - B) < 3) {
-          X = C * D;
-        } else {
-          X = (E / F) * (F - B);
-        }
-
-        // Calculate buffer tank size
-        bufferTankSize = X / Y;
-      } else if (module.title === "Equipment Comparison Calculator") {
-        const v44 = Number(module.inputs.find(i => i.label === "First Value (V44)")?.value) || 0;
-        const v46 = Number(module.inputs.find(i => i.label === "Second Value (V46)")?.value) || 0;
-        
-        // Get lookup table values
-        const table1LookupStr = module.inputs.find(i => i.label === "Table 1 Lookup Values (AM111:AM121)")?.value as string;
-        const table1ReturnStr = module.inputs.find(i => i.label === "Table 1 Return Values (AJ111:AJ121)")?.value as string;
-        const table2LookupStr = module.inputs.find(i => i.label === "Table 2 Lookup Values (AN111:AN121)")?.value as string;
-
-        // Convert string inputs to number arrays
-        const table1Lookup = table1LookupStr.split(',').map(Number).filter(n => !isNaN(n));
-        const table1Return = table1ReturnStr.split(',').map(Number).filter(n => !isNaN(n));
-        const table2Lookup = table2LookupStr.split(',').map(Number).filter(n => !isNaN(n));
-
-        // Perform XLOOKUP operations
-        const x43 = xlookup(v44, table1Lookup, table1Return) || 0;
-        const z43 = xlookup(v46, table2Lookup, table1Return) || 0;
-
-        // Compare results
-        comparisonResult = Math.max(x43, z43);
-      }
-    });
-
-    const energyConsumption = totalPower * 24;
+    const results = {
+      ...calculatePowerResults(modules, globalConstants, powerLookupTable),
+      ...calculateVolumeResults(modules),
+      ...calculateComparisonResults(modules, comparisonLookupTables)
+    };
 
     return {
-      installedPower: Number(totalPower.toFixed(3)),
-      totalFlow: Number(totalFlow.toFixed(3)),
-      energyConsumption: Number(energyConsumption.toFixed(3)),
-      selectedNTFModel: selectedNTFModel ? selectedNTFModel.model : "No suitable model found",
-      ntfUtilizationRate: ntfUtilizationRate ? Number(ntfUtilizationRate.toFixed(2)) : null,
-      energyMixerPower: Number(energyMixerPower.toFixed(3)),
-      selectorVolume: Number(selectorVolume.toFixed(3)),
-      bufferTankSize: Number(bufferTankSize.toFixed(3)),
-      balanceTankPower: Number(balanceTankPower.toFixed(3)),
-      comparisonResult: comparisonResult !== null ? Number(comparisonResult.toFixed(3)) : null,
+      ...results,
+      installedPower: Number(results.installedPower.toFixed(3)),
+      totalFlow: Number(results.totalFlow.toFixed(3)),
+      energyConsumption: Number(results.energyConsumption.toFixed(3)),
+      energyMixerPower: Number(results.energyMixerPower.toFixed(3)),
+      selectorVolume: Number(results.selectorVolume.toFixed(3)),
+      bufferTankSize: Number(results.bufferTankSize.toFixed(3)),
+      balanceTankPower: Number(results.balanceTankPower.toFixed(3)),
+      comparisonResult: results.comparisonResult !== null ? Number(results.comparisonResult.toFixed(3)) : null,
     };
   }
 );
