@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import CalculationItem from "./CalculationItem";
 import { selectResults } from "../store/calculatorSlice";
 import NTFResults from "./NTFResults";
 import { CalculatorResults } from "../types/moduleTypes";
+import { cn } from "@/lib/utils";
 
 const RightSidebar: React.FC = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const results = useSelector(selectResults) as CalculatorResults;
 
   const calculations = [
@@ -44,15 +48,42 @@ const RightSidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-green-50 p-4 overflow-y-auto border-l border-green-200">
-      <h2 className="text-2xl font-bold mb-4 text-green-800">Real-time Calculations</h2>
-      <div className="space-y-4">
-        <NTFResults />
-        {calculations.map((calc, index) => (
-          <CalculationItem key={index} {...calc} />
-        ))}
+    <motion.aside
+      initial={false}
+      animate={{
+        width: isCollapsed ? "48px" : "256px",
+        transition: { duration: 0.3 }
+      }}
+      className={cn(
+        "bg-green-50 overflow-hidden border-l border-green-200 relative",
+        isCollapsed ? "w-12" : "w-64"
+      )}
+    >
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute left-0 top-4 bg-green-100 p-2 rounded-r hover:bg-green-200 transition-colors"
+      >
+        <motion.div
+          animate={{ rotate: isCollapsed ? 0 : 180 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ChevronRight className="h-4 w-4 text-green-800" />
+        </motion.div>
+      </button>
+
+      <div className={cn(
+        "transition-opacity duration-300",
+        isCollapsed ? "opacity-0" : "opacity-100 p-4"
+      )}>
+        <h2 className="text-2xl font-bold mb-4 text-green-800">Real-time Calculations</h2>
+        <div className="space-y-4">
+          <NTFResults />
+          {calculations.map((calc, index) => (
+            <CalculationItem key={index} {...calc} />
+          ))}
+        </div>
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 
