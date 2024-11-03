@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { PHASES } from '../constants/moduleConfiguration';
 
 interface LeftSidebarProps {
   selectedPhase: string;
   onPhaseSelect: (phase: string) => void;
 }
-
-const phases = ["Filter", "Pre-treatment", "Bio", "Polish", "Dewatering"];
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({ selectedPhase, onPhaseSelect }) => {
   return (
@@ -16,15 +15,15 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({ selectedPhase, onPhaseSelect 
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">Phases</h2>
         <div className="space-y-2">
-          {phases.map((phase) => (
+          {PHASES.map((phase) => (
             <button
-              key={phase}
-              onClick={() => onPhaseSelect(phase)}
+              key={phase.title}
+              onClick={() => onPhaseSelect(phase.title)}
               className={`w-full text-left py-2 px-4 rounded transition-colors ${
-                selectedPhase === phase ? 'bg-gray-700' : 'hover:bg-gray-700'
+                selectedPhase === phase.title ? 'bg-gray-700' : 'hover:bg-gray-700'
               }`}
             >
-              {phase}
+              {phase.title}
             </button>
           ))}
         </div>
