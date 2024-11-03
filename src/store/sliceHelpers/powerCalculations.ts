@@ -5,7 +5,29 @@ export const calculatePowerResults = (modules: ModuleData[], globalConstants: an
   let totalFlow = 0;
   let balanceTankPower = 0;
   let energyMixerPower = 0;
+  let selectorVolume = 0;
 
+  // First calculate B68 (Volume Calculator) result
+  const volumeCalculatorModule = modules.find(m => m.title === "Volume Calculator (B68)");
+  if (volumeCalculatorModule) {
+    const time = Number(volumeCalculatorModule.inputs.find(i => i.label === "Time (B45)")?.value) || 0;
+    const flowReturnSludge = Number(volumeCalculatorModule.inputs.find(i => i.label === "Flow Return Sludge (B63)")?.value) || 0;
+    const influentFlowBio = Number(volumeCalculatorModule.inputs.find(i => i.label === "Influent Flow Bio (B53)")?.value) || 0;
+    const recycleFlowAT = Number(volumeCalculatorModule.inputs.find(i => i.label === "Recycle Flow AT (B65)")?.value) || 0;
+
+    // Calculate B68 volume
+    selectorVolume = (time / 60) * (flowReturnSludge + influentFlowBio + recycleFlowAT);
+  }
+
+  // Then calculate B70 (Energy Mixer Power) using B68 result
+  const energyMixerModule = modules.find(m => m.title === "Power B70 - Energy Mixer");
+  if (energyMixerModule && selectorVolume > 0) {
+    const mixingEnergy = Number(energyMixerModule.inputs.find(i => i.label === "Mixing Energy")?.value) || 0;
+    energyMixerPower = (selectorVolume * mixingEnergy) / 1000;
+    totalPower += energyMixerPower;
+  }
+
+  // Calculate other powers
   modules.forEach((module) => {
     if (module.title === "Power Calculation for Balance Tank (N46)") {
       const tankSize = Number(module.inputs.find(i => i.label === "Tank Size (F51)")?.value) || 1;
@@ -35,6 +57,7 @@ export const calculatePowerResults = (modules: ModuleData[], globalConstants: an
     totalFlow,
     energyConsumption,
     energyMixerPower,
+    selectorVolume,
     balanceTankPower
   };
 };
