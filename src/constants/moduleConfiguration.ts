@@ -27,9 +27,9 @@ export const PHASES: PhaseConfig[] = [
   {
     title: "Bio",
     modules: [
+      "Feed Pump (Specs)",
       "Feed Pump (Civil -- B68)",
       "Power B70 - Energy Mixer",
-      "Feed Pump (Specs)",
       "Level Control (LC)"
     ]
   },
