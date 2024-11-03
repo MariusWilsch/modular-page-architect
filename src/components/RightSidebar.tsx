@@ -58,7 +58,7 @@ const RightSidebar: React.FC = () => {
         transition: { duration: 0.3 }
       }}
       className={cn(
-        "bg-green-50 overflow-hidden border-l border-green-200 relative",
+        "bg-green-50 border-l border-green-200 relative h-full flex flex-col",
         isCollapsed ? "w-12" : "w-64"
       )}
     >
@@ -75,7 +75,7 @@ const RightSidebar: React.FC = () => {
       </button>
 
       <div className={cn(
-        "transition-opacity duration-300",
+        "transition-opacity duration-300 flex-1 overflow-y-auto",
         isCollapsed ? "opacity-0" : "opacity-100 p-4"
       )}>
         <h2 className="text-2xl font-bold mb-4 text-green-800">Real-time Calculations</h2>
