@@ -22,18 +22,4 @@ export const basicModules: ModuleData[] = [
     ],
     formula: "To be defined",
   },
-  {
-    title: "Feed Pump (Specs)",
-    inputs: [
-      { label: "Status", value: "To be defined", type: InputType.FREQUENT },
-    ],
-    formula: "To be defined",
-  },
-  {
-    title: "Feed Pump (Civil)",
-    inputs: [
-      { label: "Status", value: "To be defined", type: InputType.FREQUENT },
-    ],
-    formula: "To be defined",
-  },
 ];

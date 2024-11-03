@@ -22,7 +22,7 @@ export const calculationModules: ModuleData[] = [
       "X = \\frac{\\text{Flow Rate}}{\\text{Peak Factor}}\\quad \\text{\n} \\quad Y = X \\leq (\\text{list of values})",
   },
   {
-    title: "Feed Pump (Civil -- B68)",
+    title: "Volume Calculator (B68)",
     inputs: [
       {
         label: "Time (B45)",
