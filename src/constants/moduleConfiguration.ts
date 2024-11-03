@@ -43,7 +43,9 @@ export const PHASES: PhaseConfig[] = [
   },
   {
     title: "Time Conversion (Dummy)",
-    modules: []
+    modules: [
+      "Converting Tallinn to Los Angeles"
+    ]
   }
 ];
 
