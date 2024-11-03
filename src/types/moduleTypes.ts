@@ -32,4 +32,5 @@ export interface CalculatorResults {
   bufferTankSize: number;
   balanceTankPower: number;
   comparisonResult: number | null;
+  losAngelesTime: string | null;
 }
