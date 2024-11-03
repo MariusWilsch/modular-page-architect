@@ -6,6 +6,7 @@ import RightSidebar from './RightSidebar';
 
 const Layout: React.FC = () => {
   const [isFormulaView, setIsFormulaView] = useState(false);
+  const [selectedPhase, setSelectedPhase] = useState('Filter');
 
   const toggleView = () => {
     setIsFormulaView(!isFormulaView);
@@ -15,8 +16,14 @@ const Layout: React.FC = () => {
     <div className="flex flex-col h-screen">
       <Header isFormulaView={isFormulaView} toggleView={toggleView} />
       <div className="flex flex-1 overflow-hidden">
-        <LeftSidebar />
-        <MainContent isFormulaView={isFormulaView} />
+        <LeftSidebar 
+          selectedPhase={selectedPhase} 
+          onPhaseSelect={setSelectedPhase} 
+        />
+        <MainContent 
+          isFormulaView={isFormulaView} 
+          selectedPhase={selectedPhase} 
+        />
         <RightSidebar />
       </div>
     </div>
