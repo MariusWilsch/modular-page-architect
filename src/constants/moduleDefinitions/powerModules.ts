@@ -2,6 +2,18 @@ import { ModuleData, InputType } from "../../types/moduleTypes";
 
 export const powerModules: ModuleData[] = [
   {
+    title: "Mixer (Specs -- N46)",
+    inputs: [
+      {
+        label: "Tank Size (F51)",
+        value: 1,
+        type: InputType.FREQUENT,
+        validation: { min: 1, max: 5 },
+      }
+    ],
+    formula: "P = LOOKUP(F51, PowerTable)",
+  },
+  {
     title: "Power B70 - Energy Mixer",
     inputs: [
       {
@@ -13,18 +25,6 @@ export const powerModules: ModuleData[] = [
       },
     ],
     formula: "P_{B70} = \\frac{V_{B68} \\cdot E_{mixing}}{1000}",
-  },
-  {
-    title: "Power Calculation for Balance Tank (N46)",
-    inputs: [
-      {
-        label: "Tank Size (F51)",
-        value: 1,
-        type: InputType.FREQUENT,
-        validation: { min: 1, max: 5 },
-      }
-    ],
-    formula: "P = LOOKUP(F51, PowerTable)",
   },
   {
     title: "Unit Comparison",

@@ -11,7 +11,7 @@ interface MainContentProps {
 const phaseModules = {
   "Filter": ["Feed Pump", "Level Control (LC)", "NTF Value Finder"],
   "Pre-treatment": [
-    "Power Calculation for Balance Tank (N46)",
+    "Mixer (Specs -- N46)",
     "Feed Pump (Specs)",
     "Feed Pump (Civil)",
     "Level Control (LC)"
