@@ -2,7 +2,7 @@ import React from "react";
 
 interface CalculationItemProps {
   label: string;
-  value: number;
+  value: number | string;
   unit: string;
 }
 

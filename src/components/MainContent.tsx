@@ -2,34 +2,15 @@ import React from "react";
 import Module from "./organisms/Module";
 import AddModule from "./AddModule";
 import { dummyModules } from "../constants/dummyData";
+import { getModulesForPhase } from "../constants/moduleConfiguration";
 
 interface MainContentProps {
   isFormulaView: boolean;
   selectedPhase: string;
 }
 
-const phaseModules = {
-  "Filter": ["Feed Pump", "Level Control (LC)", "NTF Value Finder"],
-  "Pre-treatment": [
-    "Feed Pump (Specs)",
-    "Feed Pump (Civil)",
-    "Mixer (Specs -- N46)",
-    "Level Control (LC)"
-  ],
-  "Bio": [
-    "Feed Pump (Civil -- B68)",
-    "Power B70 - Energy Mixer",
-    "Feed Pump (Specs)",
-    "Level Control (LC)"
-  ],
-  "Polish": [],
-  "Dewatering": []
-};
-
 const MainContent: React.FC<MainContentProps> = ({ isFormulaView, selectedPhase }) => {
-  const filteredModules = dummyModules.filter(module => 
-    phaseModules[selectedPhase as keyof typeof phaseModules].includes(module.title)
-  );
+  const filteredModules = getModulesForPhase(selectedPhase, dummyModules);
 
   return (
     <main className="flex-1 p-6 overflow-y-auto">
