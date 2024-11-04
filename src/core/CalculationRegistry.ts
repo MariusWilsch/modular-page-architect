@@ -1,15 +1,17 @@
+import { ModuleDefinition } from "./types/moduleTypes";
 import { CalculationObserver } from "./CalculationObserver";
+import { CalculationFactory } from "./CalculationFactory";
+import { BaseCalculation } from "./calculations/BaseCalculation";
 
 export class CalculationRegistry {
-  static registerCalculation(
-    calculationId: string,
-    dependencies: string[],
-    calculationFn: (inputs: any) => number
+  static registerCalculationType(
+    type: string,
+    CalculationClass: new (moduleId: string) => BaseCalculation
   ) {
-    CalculationObserver.subscribe(calculationId, dependencies);
-    CalculationObserver.registerCalculation(calculationId, () => {
-      const inputs = CalculationObserver.getInputs(calculationId);
-      return calculationFn(inputs);
-    });
+    CalculationFactory.register(type, CalculationClass);
   }
-} 
+
+  static registerModule(definition: ModuleDefinition) {
+    CalculationObserver.registerModule(definition);
+  }
+}

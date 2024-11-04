@@ -1,7 +1,10 @@
 import React from "react";
 import { CalculationObserver } from "../../core/CalculationObserver";
-import { registerFeedPumpCalculation } from "../../core/calculations/feedPump";
-import FeedPumpModule from "./FeedPumpModule";
+import { CalculationRegistry } from "../../core/CalculationRegistry";
+import { CalculationFactory } from "../../core/CalculationFactory";
+import { feedPumpDefinition } from "../../core/moduleRegistry";
+import GenericModule from "./GenericModule";
+import { FeedPumpCalculation } from "../../core/calculations/FeedPumpCalculation";
 
 interface Results {
   power: number;
@@ -17,30 +20,28 @@ const TemporaryContent: React.FC = () => {
   });
 
   React.useEffect(() => {
-    // Register feed pump calculation
-    registerFeedPumpCalculation();
+    // Register calculation type first
+    CalculationFactory.register("feed-pump", FeedPumpCalculation);
 
-    // Register result display calculation
+    // Then register module
+    CalculationRegistry.registerModule(feedPumpDefinition);
+
+    // Create result display handler
     const handleCalculation = () => {
-      const power = CalculationObserver.getResult("feed-pump") || 0;
-      const inputs = CalculationObserver.getInputs("feed-pump");
+      const power = CalculationObserver.getResult(feedPumpDefinition.id);
       setResults({
         power,
-        flow: inputs?.flowRate || 0,
+        flow: power * 0.8, // Example calculation
         energy: power * 24,
       });
     };
 
     // Subscribe to feed pump changes
-    CalculationObserver.subscribe("result-display", ["feed-pump"]);
-    CalculationObserver.registerCalculation("result-display", handleCalculation);
-
-    // Initial calculation
+    CalculationObserver.subscribe("result-display", [feedPumpDefinition.id]);
     handleCalculation();
 
-    // Cleanup
     return () => {
-      // Cleanup will be handled by CalculationObserver
+      CalculationObserver.unregisterModule(feedPumpDefinition.id);
     };
   }, []);
 
@@ -48,7 +49,7 @@ const TemporaryContent: React.FC = () => {
     <div className="flex h-screen">
       <div className="flex-1 p-6 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-6">Feed Pump Calculation</h2>
-        <FeedPumpModule />
+        <GenericModule definition={feedPumpDefinition} />
       </div>
       <ResultsPanel results={results} />
     </div>
@@ -61,7 +62,11 @@ const ResultsPanel: React.FC<{ results: Results }> = ({ results }) => (
     <div className="space-y-6">
       <ResultItem label="Installed Power" value={results.power} unit="kW" />
       <ResultItem label="Total Flow" value={results.flow} unit="m³/h" />
-      <ResultItem label="Energy Consumption" value={results.energy} unit="kWh/day" />
+      <ResultItem
+        label="Energy Consumption"
+        value={results.energy}
+        unit="kWh/day"
+      />
     </div>
   </div>
 );
@@ -73,7 +78,9 @@ const ResultItem: React.FC<{ label: string; value: number; unit: string }> = ({
 }) => (
   <div>
     <h3 className="font-semibold mb-2">{label}</h3>
-    <p className="text-xl">{value.toFixed(2)} {unit}</p>
+    <p className="text-xl">
+      {value.toFixed(2)} {unit}
+    </p>
   </div>
 );
 

@@ -1,48 +1,68 @@
+import { ModuleDefinition } from './types/moduleTypes';
+import { CalculationFactory } from './CalculationFactory';
+import { BaseCalculation } from './calculations/BaseCalculation';
+
 export class CalculationObserver {
-  private static inputs = new Map<string, any>();
-  private static calculations = new Map<string, Function>();
-  private static results = new Map<string, any>();
+  private static modules = new Map<string, ModuleDefinition>();
+  private static calculations = new Map<string, BaseCalculation>();
+  private static results = new Map<string, number>();
   private static listeners = new Map<string, Set<string>>();
 
-  static setInputs(moduleId: string, values: any) {
-    this.inputs.set(moduleId, values);
-    this.recalculate(moduleId);
+  static registerModule(definition: ModuleDefinition) {
+    this.modules.set(definition.id, definition);
+    const calculation = CalculationFactory.create(
+      definition.calculationType,
+      definition.id
+    );
+    this.calculations.set(definition.id, calculation);
+    
+    if (definition.dependencies) {
+      this.subscribe(definition.id, definition.dependencies);
+    }
   }
 
-  static getInputs(moduleId: string) {
-    return this.inputs.get(moduleId);
+  static setInputs(moduleId: string, values: Record<string, number>) {
+    const calculation = this.calculations.get(moduleId);
+    if (calculation) {
+      calculation.setInputs(values);
+      this.recalculate(moduleId);
+    }
   }
 
-  static getResult(moduleId: string) {
-    return this.results.get(moduleId);
+  static getResult(moduleId: string): number {
+    return this.results.get(moduleId) || 0;
   }
 
   private static recalculate(moduleId: string) {
-    const calc = this.calculations.get(moduleId);
-    if (calc) {
-      const result = calc();
+    const calculation = this.calculations.get(moduleId);
+    if (calculation) {
+      const result = calculation.calculate();
       this.results.set(moduleId, result);
       this.notifyListeners(moduleId);
     }
   }
 
-  private static notifyListeners(moduleId: string) {
-    const listeners = this.listeners.get(moduleId) || new Set();
-    listeners.forEach(listenerId => {
-      const listenerCalc = this.calculations.get(listenerId);
-      if (listenerCalc) listenerCalc();
-    });
-  }
-
   static subscribe(listenerId: string, dependencies: string[]) {
-    dependencies.forEach(depId => {
+    dependencies.forEach((depId) => {
       const current = this.listeners.get(depId) || new Set();
       current.add(listenerId);
       this.listeners.set(depId, current);
     });
   }
 
-  static registerCalculation(moduleId: string, calc: Function) {
-    this.calculations.set(moduleId, calc);
+  private static notifyListeners(moduleId: string) {
+    const listeners = this.listeners.get(moduleId) || new Set();
+    listeners.forEach((listenerId) => {
+      this.recalculate(listenerId);
+    });
   }
-} 
+
+  static unregisterModule(moduleId: string) {
+    this.modules.delete(moduleId);
+    this.calculations.delete(moduleId);
+    this.results.delete(moduleId);
+    this.listeners.forEach((listeners) => {
+      listeners.delete(moduleId);
+    });
+  }
+}
