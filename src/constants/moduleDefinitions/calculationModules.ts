@@ -54,17 +54,5 @@ export const calculationModules: ModuleData[] = [
       },
     ],
     formula: "V_{B68} = \\frac{t_{B45}}{60} \\cdot (Q_{B63} + Q_{B53} + Q_{B65})",
-  },
-  {
-    title: "Converting Tallinn to Los Angeles",
-    inputs: [
-      {
-        label: "Tallinn time now",
-        value: "",
-        type: InputType.FREQUENT,
-        validation: { min: 0 },
-      },
-    ],
-    formula: "LA Time = toZonedTime(Tallinn Time, 'America/Los_Angeles')",
-  },
+  }
 ];

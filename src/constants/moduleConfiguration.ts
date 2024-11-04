@@ -40,12 +40,6 @@ export const PHASES: PhaseConfig[] = [
   {
     title: "Dewatering",
     modules: []
-  },
-  {
-    title: "Time Conversion (Dummy)",
-    modules: [
-      "Converting Tallinn to Los Angeles"
-    ]
   }
 ];
 
