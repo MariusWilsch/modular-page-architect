@@ -6,7 +6,6 @@ import { calculatePowerResults } from "./sliceHelpers/powerCalculations";
 import { calculateVolumeResults } from "./sliceHelpers/volumeCalculations";
 import { calculateComparisonResults } from "./sliceHelpers/comparisonCalculations";
 import { calculateNTFResults } from "./sliceHelpers/ntfCalculations";
-import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 
 interface CalculatorState {
   modules: typeof dummyModules;
@@ -22,7 +21,6 @@ interface CalculatorState {
     bufferTankSize: number;
     balanceTankPower: number;
     comparisonResult: number | null;
-    losAngelesTime: string | null;
   };
 }
 
@@ -40,7 +38,6 @@ const initialState: CalculatorState = {
     bufferTankSize: 0,
     balanceTankPower: 0,
     comparisonResult: null,
-    losAngelesTime: null,
   },
 };
 
@@ -50,21 +47,11 @@ export const calculateResults = createAsyncThunk(
     const state = getState() as RootState;
     const { modules, globalConstants } = state.calculator;
 
-    // Find time conversion module
-    const timeModule = modules.find(m => m.title === "Converting Tallinn to Los Angeles");
-    let losAngelesTime = null;
-    
-    if (timeModule && timeModule.inputs[0].value) {
-      const tallinnTime = new Date();
-      losAngelesTime = formatInTimeZone(tallinnTime, 'America/Los_Angeles', 'yyyy-MM-dd HH:mm:ss zzz');
-    }
-
     const results = {
       ...calculatePowerResults(modules, globalConstants, powerLookupTable),
       ...calculateVolumeResults(modules),
       ...calculateComparisonResults(modules, comparisonLookupTables),
       ...calculateNTFResults(modules),
-      losAngelesTime,
     };
 
     return {

@@ -13,9 +13,6 @@ const RightSidebar: React.FC = () => {
   const results = useSelector(selectResults) as CalculatorResults;
 
   const calculations = [
-    ...(results.losAngelesTime ? [
-      { label: "Los Angeles Time", value: results.losAngelesTime, unit: "" }
-    ] : []),
     { label: "Installed Power", value: results.installedPower, unit: "kW" },
     { label: "Total Flow", value: results.totalFlow, unit: "m³/h" },
     {
