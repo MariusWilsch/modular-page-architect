@@ -52,7 +52,7 @@ const RightSidebar: React.FC = () => {
       initial={false}
       animate={{
         width: isCollapsed ? "48px" : "256px",
-        transition: { duration: 0.3 }
+        transition: { duration: 0.3 },
       }}
       className={cn(
         "bg-green-50 border-l border-green-200 relative h-full flex flex-col",
@@ -71,11 +71,15 @@ const RightSidebar: React.FC = () => {
         </motion.div>
       </button>
 
-      <div className={cn(
-        "transition-opacity duration-300 flex-1 overflow-y-auto",
-        isCollapsed ? "opacity-0" : "opacity-100 p-4"
-      )}>
-        <h2 className="text-2xl font-bold mb-4 text-green-800">Real-time Calculations</h2>
+      <div
+        className={cn(
+          "transition-opacity duration-300 flex-1 overflow-y-auto",
+          isCollapsed ? "opacity-0" : "opacity-100 p-4"
+        )}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-green-800">
+          Real-time Calculations
+        </h2>
         <div className="space-y-4">
           <NTFResults />
           {calculations.map((calc, index) => (

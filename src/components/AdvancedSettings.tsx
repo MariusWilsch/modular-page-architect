@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Sheet,
@@ -15,8 +14,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   selectGlobalConstants,
   selectModules,
@@ -93,7 +90,9 @@ const AdvancedSettings = () => {
                           value={input.value}
                           unit={input.unit}
                           moduleIndex={moduleIndex}
-                          inputIndex={module.inputs.findIndex((i) => i.label === input.label)}
+                          inputIndex={module.inputs.findIndex(
+                            (i) => i.label === input.label
+                          )}
                         />
                       ))}
                     </div>
@@ -107,6 +106,5 @@ const AdvancedSettings = () => {
     </Sheet>
   );
 };
-
 
 export default AdvancedSettings;

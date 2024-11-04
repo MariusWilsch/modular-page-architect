@@ -40,6 +40,10 @@ export const PHASES: PhaseConfig[] = [
   {
     title: "Dewatering",
     modules: []
+  },
+  {
+    title: "All-Temporary--Refactoring",
+    modules: []
   }
 ];
 

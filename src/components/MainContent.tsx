@@ -3,6 +3,7 @@ import Module from "./organisms/Module";
 import AddModule from "./AddModule";
 import { dummyModules } from "../constants/dummyData";
 import { getModulesForPhase } from "../constants/moduleConfiguration";
+import TemporaryContent from "./temporary/TemporaryContent";
 
 interface MainContentProps {
   isFormulaView: boolean;
@@ -10,6 +11,10 @@ interface MainContentProps {
 }
 
 const MainContent: React.FC<MainContentProps> = ({ isFormulaView, selectedPhase }) => {
+  if (selectedPhase === "All-Temporary--Refactoring") {
+    return <TemporaryContent />;
+  }
+
   const filteredModules = getModulesForPhase(selectedPhase, dummyModules);
 
   return (
